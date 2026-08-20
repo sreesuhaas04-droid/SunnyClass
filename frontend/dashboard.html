@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1A0706">
+<title>Dashboard · SmartClass AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/liquid-glass.css">
+<link rel="stylesheet" href="css/classroom.css">
+<link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body class="dash viz-root">
+
+<nav class="dash-nav">
+  <div class="dash-brand">☀️ SmartClass <em>AI</em></div>
+  <div class="dash-nav-right">
+    <div class="who">
+      <b id="who-name">—</b>
+      <span id="who-sub"></span>
+    </div>
+    <button class="icon-btn" id="btn-theme" title="Light / dark">🌙</button>
+    <button class="icon-btn" id="btn-logout" title="Sign out">⏻</button>
+  </div>
+</nav>
+
+<main class="dash-main">
+
+  <div class="dash-head">
+    <div>
+      <h1 id="greeting">Dashboard</h1>
+      <p id="subgreeting">Loading your classes…</p>
+    </div>
+    <button class="btn btn-primary" id="btn-join" hidden>Join live class →</button>
+  </div>
+
+  <!-- ---------- headline stats ---------- -->
+  <section class="cards cols-4 mb" id="stats"></section>
+
+  <!-- ---------- attendance composition + weekly ---------- -->
+  <section class="cards cols-2 mb">
+    <div class="card">
+      <h2>Attendance composition</h2>
+      <p class="sub" id="comp-sub">Across every recorded session</p>
+      <div class="stack" id="comp-stack"></div>
+      <div class="legend" id="comp-legend"></div>
+      <button class="table-toggle" id="comp-table-toggle">Show as table</button>
+      <div class="tbl-wrap" id="comp-table" hidden></div>
+    </div>
+
+    <div class="card">
+      <h2>Attendance rate this week</h2>
+      <p class="sub">Share of the roster present or late, per day</p>
+      <div class="bars" id="weekly-bars"></div>
+      <button class="table-toggle" id="weekly-table-toggle">Show as table</button>
+      <div class="tbl-wrap" id="weekly-table" hidden></div>
+    </div>
+  </section>
+
+  <!-- ---------- heatmap ---------- -->
+  <section class="card mb">
+    <h2 id="heat-title">Your attendance over the last 90 days</h2>
+    <p class="sub">Each cell is one day — darker means a higher share of that day's classes attended</p>
+    <div class="heat" id="heatmap"></div>
+    <div class="heat-scale">
+      <span>Less</span>
+      <i style="background:var(--seq-0)"></i><i style="background:var(--seq-1)"></i>
+      <i style="background:var(--seq-2)"></i><i style="background:var(--seq-3)"></i>
+      <i style="background:var(--seq-4)"></i><i style="background:var(--seq-5)"></i>
+      <span>More</span>
+    </div>
+  </section>
+
+  <!-- ---------- classes ---------- -->
+  <section class="cards cols-2 mb">
+    <div class="card">
+      <h2 id="classes-title">My classes</h2>
+      <p class="sub" id="classes-sub"></p>
+      <div class="cards" id="classes" style="gap:10px"></div>
+    </div>
+
+    <div class="card">
+      <h2>Recordings</h2>
+      <p class="sub">Past lectures with their transcripts</p>
+      <div class="cards" id="recordings" style="gap:10px"></div>
+    </div>
+  </section>
+
+  <!-- ---------- teacher-only: per-student grid ---------- -->
+  <section class="card mb" id="roster-card" hidden>
+    <h2>Student attendance</h2>
+    <p class="sub" id="roster-sub">Per-student attendance, engagement and proctor flags</p>
+    <div class="tbl-wrap" id="roster-table"></div>
+  </section>
+
+</main>
+
+<div class="viz-tip" id="tip"></div>
+<div class="toast-container" id="toasts"></div>
+
+<script src="js/api.js"></script>
+<script src="js/sunny.js"></script>
+<script src="js/dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<meta name="theme-color" content="#1A0706">
+<title>Live Classroom · SmartClass AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/liquid-glass.css">
+<link rel="stylesheet" href="css/classroom.css">
+</head>
+<body class="classroom-body">
+
+<!-- ============ Pre-join / verification gate ============ -->
+<div class="gate" id="gate">
+  <div class="gate-card glass-float">
+    <div class="gate-head">
+      <div class="gate-logo">☀️</div>
+      <div>
+        <h1 class="gate-title" id="gate-title">Joining class…</h1>
+        <p class="gate-sub" id="gate-sub">Checking your camera and identity</p>
+      </div>
+    </div>
+
+    <div class="gate-preview">
+      <video id="gate-video" autoplay muted playsinline></video>
+      <canvas id="gate-overlay"></canvas>
+      <div class="gate-scanline" id="gate-scanline"></div>
+    </div>
+
+    <ol class="gate-steps" id="gate-steps">
+      <li data-step="camera"><span class="dot"></span> Camera &amp; microphone</li>
+      <li data-step="models"><span class="dot"></span> Loading face models</li>
+      <li data-step="face"><span class="dot"></span> Verifying your face</li>
+      <li data-step="roll"><span class="dot"></span> Matching roll number</li>
+    </ol>
+
+    <div class="gate-msg" id="gate-msg"></div>
+
+    <div class="gate-actions">
+      <button class="btn btn-primary" id="gate-action" disabled>Preparing…</button>
+      <button class="btn btn-ghost" id="gate-cancel">Back to dashboard</button>
+    </div>
+
+    <p class="gate-privacy">
+      🔒 Your video never leaves this device — only a mathematical face signature
+      is sent for matching.
+    </p>
+  </div>
+</div>
+
+<!-- ============ Classroom ============ -->
+<div class="app-shell" id="shell" hidden>
+
+  <header class="app-bar glass">
+    <div class="bar-left">
+      <span class="live-pill" id="live-pill"><span class="status-dot status-dot-live"></span> LIVE</span>
+      <div class="bar-title">
+        <strong id="class-name">Class</strong>
+        <span id="class-subject"></span>
+      </div>
+    </div>
+
+    <div class="bar-center">
+      <span class="chip" id="class-timer">00:00</span>
+      <span class="chip" id="net-chip" title="Connection quality">📶 <span id="net-label">auto</span></span>
+      <span class="chip" id="rtt-chip" title="Round-trip latency">⚡ <span id="rtt-label">–</span></span>
+      <span class="chip" id="people-chip">👥 <span id="people-count">1</span></span>
+    </div>
+
+    <div class="bar-right">
+      <button class="icon-btn" id="btn-theme" aria-label="Switch theme" title="Light / dark">🌙</button>
+      <div class="ring" id="engagement-ring" title="Engagement">
+        <span id="engagement-score">100%</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="stage" id="stage">
+    <section class="grid" id="video-grid"></section>
+
+    <aside class="side-panel glass" id="side-panel">
+      <div class="side-tabs">
+        <button class="side-tab active" data-panel="people">People</button>
+        <button class="side-tab" data-panel="attendance">Attendance</button>
+        <button class="side-tab" data-panel="transcript">Transcript</button>
+      </div>
+      <div class="side-body" id="panel-people"></div>
+      <div class="side-body" id="panel-attendance" hidden></div>
+      <div class="side-body" id="panel-transcript" hidden></div>
+    </aside>
+  </main>
+
+  <div class="captions-bar" id="captions-bar" hidden>
+    <span class="cc-speaker" id="cc-speaker"></span>
+    <span class="cc-text" id="cc-text"></span>
+  </div>
+
+  <footer class="toolbar glass">
+    <button class="tool" id="btn-mic" title="Mute / unmute (M)"><span>🎤</span><label>Mic</label></button>
+    <button class="tool locked" id="btn-cam" title="Camera stays on during class"><span>📷</span><label>On</label></button>
+    <button class="tool" id="btn-captions" title="Captions (C)"><span>💬</span><label>CC</label></button>
+    <button class="tool" id="btn-hand" title="Raise hand (H)"><span>✋</span><label>Hand</label></button>
+    <button class="tool teacher-only" id="btn-screen" title="Share screen"><span>🖥️</span><label>Share</label></button>
+    <button class="tool teacher-only" id="btn-record" title="Record class"><span>⏺️</span><label>Record</label></button>
+    <button class="tool" id="btn-quality" title="Video quality"><span>⚙️</span><label>Quality</label></button>
+    <button class="tool" id="btn-sunny" title="Ask SUNNY"><span>☀️</span><label>SUNNY</label></button>
+    <button class="tool danger" id="btn-leave" title="Leave class"><span>📴</span><label>Leave</label></button>
+  </footer>
+
+  <div class="quality-menu glass-float" id="quality-menu" hidden>
+    <button data-q="high">HD 720p</button>
+    <button data-q="medium">SD 480p</button>
+    <button data-q="low">Low 360p</button>
+    <button data-q="minimal">Data saver 240p</button>
+    <button data-q="audio">Audio only</button>
+  </div>
+</div>
+
+<!-- ============ Proctor violation overlay ============ -->
+<div class="violation-overlay" id="violation-overlay" hidden>
+  <div class="violation-card glass-float">
+    <div class="violation-icon">⚠️</div>
+    <h2 id="violation-title">Return to the class</h2>
+    <p id="violation-text">Leaving fullscreen or switching tabs is recorded and lowers your engagement score.</p>
+    <p class="violation-count">Infractions this class: <strong id="violation-count">0</strong></p>
+    <button class="btn btn-primary" id="btn-dismiss-violation">Resume class</button>
+  </div>
+</div>
+
+<div class="toast-container" id="toasts"></div>
+
+<script src="vendor/face-api.js"></script>
+<script src="js/api.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/webrtc.js"></script>
+<script src="js/face-recognition.js"></script>
+<script src="js/eye-tracking.js"></script>
+<script src="js/fullscreen.js"></script>
+<script src="js/captions.js"></script>
+<script src="js/recording.js"></script>
+<script src="js/sunny.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

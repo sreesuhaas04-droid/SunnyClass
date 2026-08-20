@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1A0706">
+<meta name="description" content="SmartClass AI — virtual classrooms with facial-recognition attendance, live captions, and the SUNNY AI assistant.">
+<title>SmartClass AI — Intelligent Virtual Classrooms</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/liquid-glass.css">
+<link rel="stylesheet" href="css/classroom.css">
+<style>
+  body { margin:0; background:var(--bg-primary); color:var(--text-primary); overflow-x:hidden; }
+  .nav { position:sticky; top:0; z-index:50; display:flex; align-items:center; justify-content:space-between;
+         padding:12px clamp(14px,4vw,48px); backdrop-filter:blur(18px);
+         background:var(--glass-bg); border-bottom:1px solid var(--glass-border); }
+  .brand { display:flex; align-items:center; gap:9px; font-weight:800; font-size:17px; }
+  .brand em { font-style:normal; color:var(--accent); }
+  .nav-actions { display:flex; align-items:center; gap:9px; }
+
+  .hero { display:grid; grid-template-columns:1.05fr .95fr; gap:clamp(24px,5vw,64px);
+          align-items:center; padding:clamp(36px,7vw,88px) clamp(16px,5vw,64px);
+          background:radial-gradient(900px 600px at 12% -10%, rgba(var(--accent-rgb),.16), transparent 62%); }
+  .hero h1 { font-size:clamp(32px,5.6vw,58px); line-height:1.06; letter-spacing:-.025em; margin:0 0 18px; }
+  .hero h1 span { background:linear-gradient(120deg,var(--accent),#F5A623); -webkit-background-clip:text;
+                  background-clip:text; -webkit-text-fill-color:transparent; }
+  .hero p.lead { font-size:clamp(15px,2.1vw,18px); color:var(--text-secondary); line-height:1.65; margin:0 0 26px; max-width:52ch; }
+  .pill-row { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:26px; }
+  .pill { padding:6px 13px; border-radius:999px; font-size:12.5px; background:var(--glass-bg);
+          border:1px solid var(--glass-border); color:var(--text-secondary); }
+
+  .auth-card { padding:clamp(20px,3.4vw,32px); border-radius:24px; }
+  .auth-tabs { display:flex; gap:4px; padding:4px; border-radius:12px; background:var(--glass-bg); margin-bottom:20px; }
+  .auth-tab { flex:1; padding:9px; border:0; border-radius:9px; background:transparent; cursor:pointer;
+              font-family:inherit; font-size:13.5px; font-weight:600; color:var(--text-secondary); transition:all .2s; }
+  .auth-tab.active { background:var(--accent); color:#fff; }
+  .field { margin-bottom:13px; }
+  .field label { display:block; font-size:12px; font-weight:600; color:var(--text-secondary); margin-bottom:5px; }
+  .field input, .field select {
+    width:100%; padding:11px 13px; border-radius:11px; font-family:inherit; font-size:14px; box-sizing:border-box;
+    background:var(--bg-secondary); border:1px solid var(--glass-border); color:var(--text-primary); transition:border-color .2s; }
+  .field input:focus, .field select:focus { outline:none; border-color:var(--accent); }
+  .row2 { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .auth-msg { font-size:13px; margin:10px 0 0; min-height:18px; }
+  .auth-msg.error { color:var(--accent); } .auth-msg.ok { color:#2ECC71; }
+  .demo-note { margin-top:16px; padding:11px 13px; border-radius:11px; font-size:12px; line-height:1.6;
+               background:var(--glass-bg); color:var(--text-secondary); border:1px solid var(--glass-border); }
+  .demo-note code { color:var(--accent); font-size:11.5px; }
+
+  .features { padding:clamp(36px,6vw,80px) clamp(16px,5vw,64px); }
+  .features h2 { font-size:clamp(24px,3.6vw,36px); text-align:center; margin:0 0 10px; letter-spacing:-.02em; }
+  .features > p { text-align:center; color:var(--text-secondary); margin:0 0 40px; }
+  .fgrid { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:16px; max-width:1180px; margin:0 auto; }
+  .fcard { padding:24px; border-radius:18px; background:var(--glass-bg); border:1px solid var(--glass-border);
+           transition:transform .25s cubic-bezier(.16,1,.3,1), border-color .25s; }
+  .fcard:hover { transform:translateY(-4px); border-color:var(--glass-border-hover); }
+  .fcard i { font-style:normal; font-size:26px; display:block; margin-bottom:12px; }
+  .fcard h3 { margin:0 0 7px; font-size:16px; }
+  .fcard p { margin:0; font-size:13.5px; color:var(--text-secondary); line-height:1.6; }
+
+  footer { padding:28px; text-align:center; color:var(--text-tertiary); font-size:13px;
+           border-top:1px solid var(--glass-border); }
+  @media (max-width:900px) { .hero { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="brand">☀️ SmartClass <em>AI</em></div>
+  <div class="nav-actions">
+    <button class="icon-btn" id="btn-theme" title="Light / dark">🌙</button>
+    <a class="btn btn-primary" href="#auth" style="text-decoration:none">Sign in</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div>
+    <h1>The classroom that <span>takes its own attendance</span>.</h1>
+    <p class="lead">
+      Students join with their roll number and their face. SmartClass AI verifies both against
+      the roster before the meeting opens, keeps the camera on, tracks attention from gaze,
+      captions the lecture live, and answers questions through SUNNY — your AI classmate.
+    </p>
+    <div class="pill-row">
+      <span class="pill">👤 Facial-recognition attendance</span>
+      <span class="pill">🔒 Fullscreen &amp; tab-switch lock</span>
+      <span class="pill">📶 Adapts to 2G</span>
+      <span class="pill">📝 Live captions</span>
+      <span class="pill">📱 Phone · tablet · laptop</span>
+      <span class="pill">🌗 Dark &amp; light</span>
+    </div>
+  </div>
+
+  <div class="auth-card glass-float" id="auth">
+    <div class="auth-tabs">
+      <button class="auth-tab active" data-mode="login">Sign in</button>
+      <button class="auth-tab" data-mode="register">Create account</button>
+    </div>
+
+    <form id="auth-form" autocomplete="on">
+      <div id="register-only" hidden>
+        <div class="field">
+          <label for="f-name">Full name</label>
+          <input id="f-name" name="name" type="text" placeholder="Aarav Sharma" autocomplete="name">
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label for="f-role">I am a</label>
+            <select id="f-role" name="role">
+              <option value="student">Student</option>
+              <option value="teacher">Teacher</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="f-roll">Roll number</label>
+            <input id="f-roll" name="roll" type="text" placeholder="21CS031" autocomplete="off">
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="f-email">Email</label>
+        <input id="f-email" name="email" type="email" required placeholder="you@student.edu" autocomplete="email">
+      </div>
+      <div class="field">
+        <label for="f-pass">Password</label>
+        <input id="f-pass" name="password" type="password" required placeholder="••••••••" autocomplete="current-password">
+      </div>
+
+      <button class="btn btn-primary" id="auth-submit" type="submit" style="width:100%;margin-top:6px">Sign in</button>
+      <p class="auth-msg" id="auth-msg"></p>
+    </form>
+
+    <div class="demo-note">
+      <strong>Demo accounts</strong><br>
+      Teacher — <code>ramesh.iyer@smartclass.edu</code> / <code>teach1234</code><br>
+      Student — <code>aarav.sharma@student.smartclass.edu</code> / <code>student123</code>
+      <button class="btn btn-ghost" id="fill-student" style="margin-top:9px;width:100%;font-size:12px;padding:7px">
+        Fill student credentials
+      </button>
+    </div>
+  </div>
+</section>
+
+<section class="features">
+  <h2>Everything a live class needs</h2>
+  <p>Built on a FastAPI backend with PostgreSQL, WebRTC mesh video, and WebSocket signaling.</p>
+  <div class="fgrid">
+    <div class="fcard"><i>👤</i><h3>Auto attendance by face</h3>
+      <p>face-api.js builds a 128-d descriptor in the browser; the server matches it against the roster and marks you present. Video never leaves your device.</p></div>
+    <div class="fcard"><i>🎫</i><h3>Roll-number gated rooms</h3>
+      <p>Four checks run before the meeting opens: valid session, roll number on file, enrolled in this class, and a face that matches that roll number.</p></div>
+    <div class="fcard"><i>👁️</i><h3>Attention tracking</h3>
+      <p>68-point landmarks give eye-aspect-ratio for drowsiness and gaze direction for looking away. Scores are smoothed, so a blink costs nothing.</p></div>
+    <div class="fcard"><i>🔒</i><h3>Focus lock</h3>
+      <p>Enforced fullscreen, tab-switch detection, and a wake lock. Every infraction is logged to the session and shown to the teacher live.</p></div>
+    <div class="fcard"><i>📶</i><h3>Low-bandwidth by design</h3>
+      <p>Peer-to-peer mesh means no media server hop. The quality ladder steps from 720p down to audio-only + captions as the network or room size demands.</p></div>
+    <div class="fcard"><i>☀️</i><h3>SUNNY AI</h3>
+      <p>Grounded in your real attendance rows and the live transcript. Connect any LLM key and it answers study questions too — with a free offline fallback.</p></div>
+    <div class="fcard"><i>📝</i><h3>Captions &amp; recordings</h3>
+      <p>Speech-to-text broadcast over the class socket, stored as a searchable transcript, and attached to the uploaded recording.</p></div>
+    <div class="fcard"><i>📊</i><h3>Visual attendance</h3>
+      <p>Donut charts, weekly bars, a 90-day heatmap and a per-student grid — all computed server-side from real records.</p></div>
+    <div class="fcard"><i>📱</i><h3>Every device</h3>
+      <p>Responsive from a 360px phone to a desktop, with landscape handling, safe-area insets, and a theme that follows your account.</p></div>
+  </div>
+</section>
+
+<footer>SmartClass AI · FastAPI + PostgreSQL + WebRTC · MIT licensed</footer>
+
+<script src="js/api.js"></script>
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  let mode = 'login';
+
+  /* theme */
+  const applyTheme = (t) => {
+    document.documentElement.setAttribute('data-theme', t);
+    localStorage.setItem('sc-theme', t);
+    $('btn-theme').textContent = t === 'dark' ? '🌙' : '☀️';
+    document.querySelector('meta[name=theme-color]').setAttribute('content', t === 'dark' ? '#1A0706' : '#f5f0ef');
+  };
+  applyTheme(localStorage.getItem('sc-theme') || 'dark');
+  $('btn-theme').onclick = () =>
+    applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+
+  /* already signed in? */
+  if (API.isAuthed()) {
+    API.auth.me().then(() => { location.href = '/dashboard.html'; }).catch(() => API.setToken(null));
+  }
+  if (new URLSearchParams(location.search).get('expired')) {
+    $('auth-msg').textContent = 'Your session expired — please sign in again.';
+    $('auth-msg').className = 'auth-msg error';
+  }
+
+  /* tabs */
+  document.querySelectorAll('.auth-tab').forEach(tab => {
+    tab.onclick = () => {
+      document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      mode = tab.dataset.mode;
+      $('register-only').hidden = mode === 'login';
+      $('auth-submit').textContent = mode === 'login' ? 'Sign in' : 'Create account';
+      $('f-pass').setAttribute('autocomplete', mode === 'login' ? 'current-password' : 'new-password');
+      $('auth-msg').textContent = '';
+    };
+  });
+
+  $('f-role').onchange = (e) => {
+    const isStudent = e.target.value === 'student';
+    $('f-roll').closest('.field').style.display = isStudent ? '' : 'none';
+  };
+
+  $('fill-student').onclick = () => {
+    $('f-email').value = 'aarav.sharma@student.smartclass.edu';
+    $('f-pass').value = 'student123';
+  };
+
+  /* submit */
+  $('auth-form').onsubmit = async (e) => {
+    e.preventDefault();
+    const btn = $('auth-submit'), msg = $('auth-msg');
+    btn.disabled = true;
+    btn.textContent = mode === 'login' ? 'Signing in…' : 'Creating…';
+    msg.textContent = '';
+
+    try {
+      if (mode === 'login') {
+        await API.auth.login($('f-email').value.trim(), $('f-pass').value);
+      } else {
+        await API.auth.register({
+          full_name: $('f-name').value.trim(),
+          email: $('f-email').value.trim(),
+          password: $('f-pass').value,
+          role: $('f-role').value,
+          roll_number: $('f-role').value === 'student' ? $('f-roll').value.trim() : null,
+        });
+      }
+      msg.className = 'auth-msg ok';
+      msg.textContent = 'Welcome — taking you to your dashboard…';
+      const next = new URLSearchParams(location.search).get('next');
+      setTimeout(() => { location.href = next || '/dashboard.html'; }, 500);
+    } catch (err) {
+      msg.className = 'auth-msg error';
+      msg.textContent = err.message || 'Something went wrong.';
+      btn.disabled = false;
+      btn.textContent = mode === 'login' ? 'Sign in' : 'Create account';
+    }
+  };
+})();
+</script>
+</body>
+</html>

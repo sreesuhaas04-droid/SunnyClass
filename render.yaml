@@ -1,0 +1,95 @@
+# render.yaml — Render Blueprint
+# Provisions:
+#   • smartclass-db   PostgreSQL 16 database
+#   • smartclass-api  FastAPI web service (Docker build from /backend)
+#
+# Deploy steps:
+#   1. Push this repo to GitHub.
+#   2. Go to dashboard.render.com → New → Blueprint → connect the repo.
+#   3. Render auto-generates SECRET_KEY; optionally pin your own.
+#   4. Optionally set LLM_PROVIDER + LLM_API_KEY for SUNNY AI.
+
+databases:
+  - name: smartclass-db
+    databaseName: smartclass
+    user: smartclass
+    plan: free
+
+services:
+  - type: web
+    name: smartclass-api
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: free
+    healthCheckPath: /api/health
+    numInstances: 1
+
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: smartclass-db
+          property: connectionString
+
+      - key: SECRET_KEY
+        generateValue: true
+
+      - key: ENV
+        value: production
+
+      - key: DEBUG
+        value: "false"
+
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: "10080"
+
+      - key: CORS_ORIGINS
+        value: "*"
+
+      - key: LLM_PROVIDER
+        value: none
+
+      - key: LLM_API_KEY
+        value: ""
+
+      - key: LLM_MODEL
+        value: ""
+
+      - key: FACE_MATCH_THRESHOLD
+        value: "0.52"
+
+      - key: FACE_ATTENDANCE_MIN_CONFIDENCE
+        value: "0.60"
+
+      - key: VERIFY_INTERVAL_SECONDS
+        value: "45"
+
+      - key: LATE_AFTER_MINUTES
+        value: "10"
+
+      - key: PRESENT_MIN_PRESENCE_RATIO
+        value: "0.60"
+
+      - key: MAX_VIOLATIONS_BEFORE_FLAG
+        value: "3"
+
+      - key: VIOLATION_ENGAGEMENT_PENALTY
+        value: "8"
+
+      - key: STORAGE_DIR
+        value: /app/storage
+
+      - key: MAX_RECORDING_MB
+        value: "512"
+
+      - key: STUN_SERVERS
+        value: "stun:stun.l.google.com:19302,stun:stun1.l.google.com:19302"
+
+      - key: TURN_URL
+        value: ""
+
+      - key: TURN_USERNAME
+        value: ""
+
+      - key: TURN_CREDENTIAL
+        value: ""

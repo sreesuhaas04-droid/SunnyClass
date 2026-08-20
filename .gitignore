@@ -1,0 +1,11 @@
+__pycache__/
+*.py[cod]
+.env
+*.db
+backend/storage/recordings/*
+!backend/storage/recordings/.gitkeep
+preview/
+logs/
+.venv/
+node_modules/
+.DS_Store
