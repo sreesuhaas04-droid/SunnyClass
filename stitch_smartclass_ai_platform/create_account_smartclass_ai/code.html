@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SmartClass AI - Signup</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "on-primary-fixed": "#410000",
+                "on-primary": "#680100",
+                "glow-accent": "rgba(221, 2, 0, 0.3)",
+                "inverse-primary": "#c00200",
+                "on-tertiary-fixed": "#00174a",
+                "on-error": "#690005",
+                "background-base": "#1A0706",
+                "secondary": "#ffb4ab",
+                "on-surface": "#e2e2e2",
+                "surface-container-low": "#1a1c1c",
+                "primary": "#ffb4a8",
+                "surface-bright": "#38393a",
+                "secondary-fixed-dim": "#ffb4ab",
+                "tertiary-fixed": "#dbe1ff",
+                "error": "#ffb4ab",
+                "on-surface-variant": "#e9bcb5",
+                "surface-tint": "#ffb4a8",
+                "surface-container-highest": "#333535",
+                "primary-fixed-dim": "#ffb4a8",
+                "tertiary-container": "#0061fa",
+                "surface": "#121414",
+                "tertiary": "#b3c5ff",
+                "primary-container": "#dd0200",
+                "surface-dim": "#121414",
+                "on-background": "#e2e2e2",
+                "outline-variant": "#5e3f3a",
+                "on-secondary-fixed-variant": "#7c2d26",
+                "surface-container": "#1e2020",
+                "glass-border": "rgba(217, 217, 217, 0.15)",
+                "on-primary-fixed-variant": "#930100",
+                "primary-fixed": "#ffdad4",
+                "on-secondary": "#5e1612",
+                "on-secondary-fixed": "#400203",
+                "on-tertiary-container": "#eff0ff",
+                "tertiary-fixed-dim": "#b3c5ff",
+                "secondary-container": "#7c2d26",
+                "background": "#121414",
+                "inverse-on-surface": "#2f3131",
+                "outline": "#af8781",
+                "surface-container-high": "#282a2b",
+                "surface-container-lowest": "#0d0e0f",
+                "error-container": "#93000a",
+                "on-tertiary-fixed-variant": "#003ea7",
+                "on-primary-container": "#ffedea",
+                "inverse-surface": "#e2e2e2",
+                "on-secondary-container": "#ff9a8e",
+                "on-tertiary": "#002a77",
+                "on-error-container": "#ffdad6",
+                "surface-variant": "#333535",
+                "secondary-fixed": "#ffdad6"
+        },
+        "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+        },
+        "spacing": {
+                "margin-desktop": "48px",
+                "gutter-desktop": "24px",
+                "margin-mobile": "20px",
+                "unit": "8px",
+                "gutter-tablet": "16px",
+                "md": "16px",
+                "lg": "24px",
+                "gutter": "24px",
+                "sm": "8px",
+                "container-padding": "32px",
+                "xxl": "96px",
+                "xl": "48px",
+                "xs": "4px"
+        },
+        "fontFamily": {
+                "headline-lg": [
+                        "Inter"
+                ],
+                "headline-xl": [
+                        "Inter"
+                ],
+                "body-lg": [
+                        "Inter"
+                ],
+                "display-lg-mobile": [
+                        "Inter"
+                ],
+                "label-md": [
+                        "Inter"
+                ],
+                "label-sm": [
+                        "Inter"
+                ],
+                "display-lg": [
+                        "Inter"
+                ],
+                "body-md": [
+                        "Inter"
+                ]
+        },
+        "fontSize": {
+                "headline-lg": [
+                        "32px",
+                        {
+                                "lineHeight": "40px",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "headline-xl": [
+                        "40px",
+                        {
+                                "lineHeight": "48px",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "body-lg": [
+                        "18px",
+                        {
+                                "lineHeight": "28px",
+                                "letterSpacing": "0em",
+                                "fontWeight": "400"
+                        }
+                ],
+                "display-lg-mobile": [
+                        "40px",
+                        {
+                                "lineHeight": "48px",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "700"
+                        }
+                ],
+                "label-md": [
+                        "14px",
+                        {
+                                "lineHeight": "20px",
+                                "letterSpacing": "0.04em",
+                                "fontWeight": "500"
+                        }
+                ],
+                "label-sm": [
+                        "12px",
+                        {
+                                "lineHeight": "16px",
+                                "letterSpacing": "0.06em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "display-lg": [
+                        "64px",
+                        {
+                                "lineHeight": "72px",
+                                "letterSpacing": "-0.04em",
+                                "fontWeight": "700"
+                        }
+                ],
+                "body-md": [
+                        "16px",
+                        {
+                                "lineHeight": "24px",
+                                "letterSpacing": "0.01em",
+                                "fontWeight": "400"
+                        }
+                ]
+        }
+},
+    },
+  }
+</script>
+<style>
+        body {
+            background-color: theme('colors.background');
+            color: theme('colors.on-background');
+        }
+        
+        .glass-panel {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 100%);
+            z-index: 1;
+        }
+        
+        .glass-panel::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 1px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 100%);
+            z-index: 1;
+        }
+
+        .glass-input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .glass-input:focus {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: theme('colors.primary');
+            box-shadow: 0 0 15px rgba(255, 180, 168, 0.2);
+            outline: none;
+        }
+
+        .role-chip {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .role-chip.active {
+            background: theme('colors.primary');
+            color: theme('colors.on-primary');
+            border-color: theme('colors.primary');
+            box-shadow: 0 0 20px rgba(255, 180, 168, 0.3);
+        }
+
+        .mesh-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 15% 50%, rgba(221, 2, 0, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(255, 180, 168, 0.15) 0%, transparent 50%);
+            filter: blur(60px);
+            animation: breathe 15s ease-in-out infinite alternate;
+        }
+
+        @keyframes breathe {
+            0% { transform: scale(1) translate(0, 0); }
+            50% { transform: scale(1.05) translate(2%, 2%); }
+            100% { transform: scale(1) translate(-2%, -2%); }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-md md:p-lg antialiased overflow-x-hidden selection:bg-primary selection:text-on-primary">
+<div class="mesh-bg"></div>
+<main class="w-full max-w-2xl">
+<div class="glass-panel rounded-xl p-lg md:p-xl flex flex-col gap-lg md:gap-container-padding z-10">
+<!-- Header -->
+<div class="text-center space-y-sm">
+<h1 class="font-headline-lg text-headline-lg md:font-display-lg md:text-display-lg text-primary tracking-tighter">
+                    SmartClass AI
+                </h1>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                    Create your premium learning account.
+                </p>
+</div>
+<form class="space-y-lg">
+<!-- Basic Info -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+<div class="space-y-unit">
+<label class="font-label-md text-label-md text-on-surface" for="fullName">Full Name</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-sm top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">person</span>
+<input class="glass-input w-full h-12 rounded-lg pl-xl pr-sm font-body-md text-body-md text-on-surface placeholder:text-on-surface-variant/50" id="fullName" placeholder="John Doe" type="text"/>
+</div>
+</div>
+<div class="space-y-unit">
+<label class="font-label-md text-label-md text-on-surface" for="email">Email Address</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-sm top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">mail</span>
+<input class="glass-input w-full h-12 rounded-lg pl-xl pr-sm font-body-md text-body-md text-on-surface placeholder:text-on-surface-variant/50" id="email" placeholder="john@university.edu" type="email"/>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+<div class="space-y-unit">
+<label class="font-label-md text-label-md text-on-surface" for="password">Password</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-sm top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">lock</span>
+<input class="glass-input w-full h-12 rounded-lg pl-xl pr-sm font-body-md text-body-md text-on-surface placeholder:text-on-surface-variant/50" id="password" placeholder="••••••••" type="password"/>
+</div>
+</div>
+<div class="space-y-unit">
+<label class="font-label-md text-label-md text-on-surface" for="confirmPassword">Confirm Password</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-sm top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">lock_reset</span>
+<input class="glass-input w-full h-12 rounded-lg pl-xl pr-sm font-body-md text-body-md text-on-surface placeholder:text-on-surface-variant/50" id="confirmPassword" placeholder="••••••••" type="password"/>
+</div>
+</div>
+</div>
+<!-- Role Selection -->
+<div class="space-y-md pt-sm">
+<label class="font-label-md text-label-md text-on-surface block text-center">I am joining as a</label>
+<div class="flex gap-md justify-center">
+<div class="role-chip active rounded-full px-lg py-sm flex items-center gap-sm" id="btn-student" onclick="toggleRole('student')">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">school</span>
+<span class="font-label-md text-label-md">Student</span>
+</div>
+<div class="role-chip rounded-full px-lg py-sm flex items-center gap-sm text-on-surface-variant hover:text-on-surface" id="btn-faculty" onclick="toggleRole('faculty')">
+<span class="material-symbols-outlined text-[20px]">work</span>
+<span class="font-label-md text-label-md">Faculty</span>
+</div>
+</div>
+</div>
+<!-- Conditional Fields: Student -->
+<div class="space-y-md transition-opacity duration-300" id="fields-student">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-md">
+<div class="space-y-unit">
+<label class="font-label-md text-label-md text-on-surface" for="rollNumber">Roll Number</label>
+<input class="glass-input w-full h-12 rounded-lg px-sm font-body-md text-body-md text-on-surface placeholder:text-on-surface-variant/50" id="rollNumber" placeholder="e.g. 21CS01" type="text"/>
+</div>
+<div class="space-y-unit">
+<label class="font-label-md text-label-md text-on-surface" for="studentDept">Department</label>
+<select class="glass-input w-full h-12 rounded-lg px-sm font-body-md text-body-md text-on-surface appearance-none" id="studentDept">
+<option class="bg-surface text-on-surface" value="">Select Dept</option>
+<option class="bg-surface text-on-surface" value="cs">Computer Science</option>
+<option class="bg-surface text-on-surface" value="ee">Electrical Eng.</option>
+</select>
+</div>
+<div class="space-y-unit">
+<label class="font-label-md text-label-md text-on-surface" for="year">Year</label>
+<select class="glass-input w-full h-12 rounded-lg px-sm font-body-md text-body-md text-on-surface appearance-none" id="year">
+<option class="bg-surface text-on-surface" value="">Select Year</option>
+<option class="bg-surface text-on-surface" value="1">1st Year</option>
+<option class="bg-surface text-on-surface" value="2">2nd Year</option>
+</select>
+</div>
+</div>
+</div>
+<!-- Conditional Fields: Faculty -->
+<div class="space-y-md hidden opacity-0 transition-opacity duration-300" id="fields-faculty">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+<div class="space-y-unit">
+<label class="font-label-md text-label-md text-on-surface" for="facultyDept">Department</label>
+<select class="glass-input w-full h-12 rounded-lg px-sm font-body-md text-body-md text-on-surface appearance-none" id="facultyDept">
+<option class="bg-surface text-on-surface" value="">Select Dept</option>
+<option class="bg-surface text-on-surface" value="cs">Computer Science</option>
+<option class="bg-surface text-on-surface" value="ee">Electrical Eng.</option>
+</select>
+</div>
+<div class="space-y-unit">
+<label class="font-label-md text-label-md text-on-surface" for="designation">Designation</label>
+<select class="glass-input w-full h-12 rounded-lg px-sm font-body-md text-body-md text-on-surface appearance-none" id="designation">
+<option class="bg-surface text-on-surface" value="">Select Designation</option>
+<option class="bg-surface text-on-surface" value="prof">Professor</option>
+<option class="bg-surface text-on-surface" value="assoc_prof">Associate Professor</option>
+</select>
+</div>
+</div>
+</div>
+<!-- Action -->
+<div class="pt-md">
+<button class="w-full h-14 bg-primary text-on-primary rounded-lg font-label-md text-label-md font-bold hover:bg-primary-fixed-dim transition-colors shadow-[0_0_20px_rgba(255,180,168,0.2)] hover:shadow-[0_0_30px_rgba(255,180,168,0.4)] flex items-center justify-center gap-sm" type="button">
+<span>Initialize Account</span>
+<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+<p class="text-center font-body-md text-body-md text-on-surface-variant mt-sm">
+                        Already part of the network? <a class="text-primary hover:text-primary-fixed transition-colors" href="#">Sign in</a>
+</p>
+</div>
+</form>
+</div>
+</main>
+<script>
+        function toggleRole(role) {
+            const studentBtn = document.getElementById('btn-student');
+            const facultyBtn = document.getElementById('btn-faculty');
+            const studentFields = document.getElementById('fields-student');
+            const facultyFields = document.getElementById('fields-faculty');
+            
+            // Reset styles
+            studentBtn.classList.remove('active');
+            studentBtn.classList.add('text-on-surface-variant');
+            studentBtn.querySelector('span:first-child').style.fontVariationSettings = "normal";
+            
+            facultyBtn.classList.remove('active');
+            facultyBtn.classList.add('text-on-surface-variant');
+            facultyBtn.querySelector('span:first-child').style.fontVariationSettings = "normal";
+
+            // Hide both first
+            studentFields.classList.add('hidden');
+            studentFields.classList.remove('opacity-100');
+            studentFields.classList.add('opacity-0');
+            
+            facultyFields.classList.add('hidden');
+            facultyFields.classList.remove('opacity-100');
+            facultyFields.classList.add('opacity-0');
+
+            if (role === 'student') {
+                studentBtn.classList.add('active');
+                studentBtn.classList.remove('text-on-surface-variant');
+                studentBtn.querySelector('span:first-child').style.fontVariationSettings = "'FILL' 1";
+                
+                studentFields.classList.remove('hidden');
+                // slight delay for display block to take effect before animating opacity
+                setTimeout(() => {
+                    studentFields.classList.remove('opacity-0');
+                    studentFields.classList.add('opacity-100');
+                }, 10);
+                
+            } else {
+                facultyBtn.classList.add('active');
+                facultyBtn.classList.remove('text-on-surface-variant');
+                facultyBtn.querySelector('span:first-child').style.fontVariationSettings = "'FILL' 1";
+                
+                facultyFields.classList.remove('hidden');
+                setTimeout(() => {
+                    facultyFields.classList.remove('opacity-0');
+                    facultyFields.classList.add('opacity-100');
+                }, 10);
+            }
+        }
+    </script>
+</body></html>

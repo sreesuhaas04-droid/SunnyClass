@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SmartClass AI - Student Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "on-primary-fixed": "#410000",
+                "on-primary": "#680100",
+                "glow-accent": "rgba(221, 2, 0, 0.3)",
+                "inverse-primary": "#c00200",
+                "on-tertiary-fixed": "#00174a",
+                "on-error": "#690005",
+                "background-base": "#1A0706",
+                "secondary": "#ffb4ab",
+                "on-surface": "#e2e2e2",
+                "surface-container-low": "#1a1c1c",
+                "primary": "#ffb4a8",
+                "surface-bright": "#38393a",
+                "secondary-fixed-dim": "#ffb4ab",
+                "tertiary-fixed": "#dbe1ff",
+                "error": "#ffb4ab",
+                "on-surface-variant": "#e9bcb5",
+                "surface-tint": "#ffb4a8",
+                "surface-container-highest": "#333535",
+                "primary-fixed-dim": "#ffb4a8",
+                "tertiary-container": "#0061fa",
+                "surface": "#121414",
+                "tertiary": "#b3c5ff",
+                "primary-container": "#dd0200",
+                "surface-dim": "#121414",
+                "on-background": "#e2e2e2",
+                "outline-variant": "#5e3f3a",
+                "on-secondary-fixed-variant": "#7c2d26",
+                "surface-container": "#1e2020",
+                "glass-border": "rgba(217, 217, 217, 0.15)",
+                "on-primary-fixed-variant": "#930100",
+                "primary-fixed": "#ffdad4",
+                "on-secondary": "#5e1612",
+                "on-secondary-fixed": "#400203",
+                "on-tertiary-container": "#eff0ff",
+                "tertiary-fixed-dim": "#b3c5ff",
+                "secondary-container": "#7c2d26",
+                "background": "#121414",
+                "inverse-on-surface": "#2f3131",
+                "outline": "#af8781",
+                "surface-container-high": "#282a2b",
+                "surface-container-lowest": "#0d0e0f",
+                "error-container": "#93000a",
+                "on-tertiary-fixed-variant": "#003ea7",
+                "on-primary-container": "#ffedea",
+                "inverse-surface": "#e2e2e2",
+                "on-secondary-container": "#ff9a8e",
+                "on-tertiary": "#002a77",
+                "on-error-container": "#ffdad6",
+                "surface-variant": "#333535",
+                "secondary-fixed": "#ffdad6"
+        },
+        "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+        },
+        "spacing": {
+                "margin-desktop": "48px",
+                "gutter-desktop": "24px",
+                "margin-mobile": "20px",
+                "unit": "8px",
+                "gutter-tablet": "16px",
+                "md": "16px",
+                "lg": "24px",
+                "sm": "8px",
+                "xl": "48px"
+        },
+        "fontFamily": {
+                "headline-lg": [
+                        "Inter"
+                ],
+                "headline-xl": [
+                        "Inter"
+                ],
+                "body-lg": [
+                        "Inter"
+                ],
+                "display-lg-mobile": [
+                        "Inter"
+                ],
+                "label-md": [
+                        "Inter"
+                ],
+                "label-sm": [
+                        "Inter"
+                ],
+                "display-lg": [
+                        "Inter"
+                ],
+                "body-md": [
+                        "Inter"
+                ]
+        },
+        "fontSize": {
+                "headline-lg": [
+                        "32px",
+                        {
+                                "lineHeight": "40px",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "headline-xl": [
+                        "40px",
+                        {
+                                "lineHeight": "48px",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "body-lg": [
+                        "18px",
+                        {
+                                "lineHeight": "28px",
+                                "letterSpacing": "0em",
+                                "fontWeight": "400"
+                        }
+                ],
+                "display-lg-mobile": [
+                        "40px",
+                        {
+                                "lineHeight": "48px",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "700"
+                        }
+                ],
+                "label-md": [
+                        "14px",
+                        {
+                                "lineHeight": "20px",
+                                "letterSpacing": "0.04em",
+                                "fontWeight": "500"
+                        }
+                ],
+                "label-sm": [
+                        "12px",
+                        {
+                                "lineHeight": "16px",
+                                "letterSpacing": "0.06em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "display-lg": [
+                        "64px",
+                        {
+                                "lineHeight": "72px",
+                                "letterSpacing": "-0.04em",
+                                "fontWeight": "700"
+                        }
+                ],
+                "body-md": [
+                        "16px",
+                        {
+                                "lineHeight": "24px",
+                                "letterSpacing": "0.01em",
+                                "fontWeight": "400"
+                        }
+                ]
+        }
+},
+    },
+  }
+</script>
+<style>
+        body {
+            background-color: theme('colors.background');
+            color: theme('colors.on-background');
+        }
+        .glass-panel {
+            background: rgba(30, 32, 32, 0.7);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border: 1px solid theme('colors.glass-border');
+            box-shadow: 0px 20px 40px rgba(0, 0, 0, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+        .glass-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
+        }
+        .glass-panel::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            width: 1px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
+        }
+        
+        .ai-gradient {
+            background: linear-gradient(135deg, rgba(65, 0, 0, 0.8), rgba(124, 45, 38, 0.6));
+            border: 1px solid rgba(221, 2, 0, 0.3);
+        }
+        
+        /* Pulse Animation for ClassAI Bubble */
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 0 0 rgba(221, 2, 0, 0.4); }
+            70% { box-shadow: 0 0 0 15px rgba(221, 2, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(221, 2, 0, 0); }
+        }
+        .animate-pulse-glow {
+            animation: pulse-glow 2s infinite;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col md:flex-row overflow-x-hidden selection:bg-primary selection:text-on-primary">
+<!-- SideNavBar (Desktop) -->
+<aside class="hidden md:flex flex-col h-full p-lg bg-surface/5 dark:bg-surface/8 text-primary dark:text-primary-fixed-dim font-body-md text-body-md fixed left-4 top-4 bottom-4 w-72 rounded-xl backdrop-blur-xl border border-white/10 shadow-xl z-50">
+<div class="mb-xl flex items-center gap-md">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center shrink-0">
+<img alt="User profile photo" class="w-full h-full rounded-full object-cover" data-alt="A futuristic, high-tech abstract geometric logo representing a sophisticated AI educational platform, featuring sharp crystalline shapes in electric blue and soft emerald green tones set against a deep dark background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAWXm7o_J-jENskty3BqxAvXnrbOAJI8e2psulrHygQo-7g7QDRrzOlY8hg2hdC0nt2oecZOhqZzwytYwFtzBtLepS_FVWcoexzU82MczNk8QZg0NI2IaV7Rlqgps-Ao3N00dt5-vaODulZo9Epe9Mfws_ckk1d9gC0_PqbdEeqLfHOz5OreceT6NO6oy-qi_QqDF3kobeIBIFAe34MvxmMcDMfoRXHrXcjECx50iZnNlsmY0EIPhYZBA"/>
+</div>
+<div>
+<h1 class="font-display-lg text-display-lg tracking-tighter text-primary dark:text-primary-fixed !text-2xl">SmartClass AI</h1>
+<p class="text-on-surface-variant text-sm">Premium Learning</p>
+</div>
+</div>
+<button class="w-full mb-lg py-3 rounded-lg bg-primary text-on-primary font-label-md text-label-md font-semibold hover:bg-primary-container transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[20px]">add</span>
+            New Class
+        </button>
+<nav class="flex-1 space-y-2">
+<a class="flex items-center gap-md px-4 py-3 rounded-lg text-primary dark:text-primary-fixed font-bold border-r-2 border-primary bg-white/5 transition-all scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center gap-md px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-surface-variant/70 hover:bg-white/5 hover:text-primary transition-all scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined">school</span>
+                Classes
+            </a>
+<a class="flex items-center gap-md px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-surface-variant/70 hover:bg-white/5 hover:text-primary transition-all scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined">event_available</span>
+                Attendance
+            </a>
+<a class="flex items-center gap-md px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-surface-variant/70 hover:bg-white/5 hover:text-primary transition-all scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined">insights</span>
+                Analytics
+            </a>
+<a class="flex items-center gap-md px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-surface-variant/70 hover:bg-white/5 hover:text-primary transition-all scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined">quiz</span>
+                Quizzes
+            </a>
+<a class="flex items-center gap-md px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-surface-variant/70 hover:bg-white/5 hover:text-primary transition-all scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined">smart_toy</span>
+                ClassAI
+            </a>
+</nav>
+<div class="mt-auto pt-lg space-y-2 border-t border-white/10">
+<a class="flex items-center gap-md px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-surface-variant/70 hover:bg-white/5 hover:text-primary transition-all scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined">settings</span>
+                Settings
+            </a>
+<a class="flex items-center gap-md px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-surface-variant/70 hover:bg-white/5 hover:text-primary transition-all scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined">help</span>
+                Support
+            </a>
+</div>
+</aside>
+<!-- TopAppBar -->
+<header class="fixed top-0 right-0 left-0 md:left-[19.5rem] z-40 flex justify-between items-center px-lg bg-surface/5 dark:bg-surface/8 text-primary dark:text-primary-fixed-dim font-label-md text-label-md docked full-width top-0 h-16 backdrop-blur-xl border-b border-white/10 shadow-md">
+<div class="flex items-center gap-4">
+<span class="md:hidden font-headline-lg text-headline-lg font-bold text-primary !text-xl">SmartClass AI</span>
+<div class="hidden md:flex items-center gap-2 text-on-surface-variant">
+<span class="cursor-pointer hover:text-primary transition-colors">Breadcrumbs</span>
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+<span class="cursor-pointer hover:text-primary transition-colors text-primary">09:41 AM</span>
+</div>
+</div>
+<div class="flex items-center gap-lg">
+<div class="flex items-center gap-4 text-on-surface-variant">
+<span class="material-symbols-outlined cursor-pointer hover:text-primary transition-colors">dark_mode</span>
+<span class="material-symbols-outlined cursor-pointer hover:text-primary transition-colors">wifi</span>
+<span class="material-symbols-outlined cursor-pointer hover:text-primary transition-colors">videocam</span>
+<span class="material-symbols-outlined cursor-pointer hover:text-primary transition-colors">verified_user</span>
+</div>
+<div class="w-8 h-8 rounded-full bg-surface-variant overflow-hidden border border-white/10 cursor-pointer">
+<img alt="User avatar" class="w-full h-full object-cover" data-alt="A professional yet relaxed portrait photo of a university student, well-lit with cinematic edge lighting, looking forward confidently, set against a dark, minimalist abstract background with subtle neon blue accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBt5vLzCzWs-4DgizSLUt38w4fApfMAfSt_HUPgbSWs3c1TviT7cch3QhTShTK56uLII-ggxDMhLWLPp1_Y4b_wgi-6bD2TCJpRisP8SOOFQMWOH3F__J7RRTH7ciSjHzYw-ywNMi0scj_J5O6ug94WbCBPguNKE84Ex-BehyaHLkTqcx7qDrYezb7MDmrjTq4hy_6o8JbMy5NKKexNtb_XhmhQ1eW2KQwBwXvUJLIHQWDezbd9rWXTDg"/>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 w-full mt-16 pb-24 md:pb-8 md:pl-[19.5rem] p-lg md:p-xl transition-all">
+<!-- Welcome Section -->
+<section class="mb-xl">
+<h1 class="font-headline-xl text-headline-xl text-on-surface mb-2">Good evening, Suhaas</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Here's your learning overview.</p>
+</section>
+<!-- Stat Cards Bento Grid -->
+<section class="grid grid-cols-2 lg:grid-cols-4 gap-md mb-xl">
+<div class="glass-panel p-lg rounded-xl flex flex-col justify-between h-32 hover:bg-white/5 transition-colors cursor-pointer group">
+<div class="flex justify-between items-start">
+<span class="text-on-surface-variant font-label-md text-label-md">Attendance</span>
+<span class="material-symbols-outlined text-tertiary-fixed-dim group-hover:scale-110 transition-transform">event_available</span>
+</div>
+<div>
+<span class="font-headline-lg text-headline-lg text-on-surface">92%</span>
+</div>
+</div>
+<div class="glass-panel p-lg rounded-xl flex flex-col justify-between h-32 hover:bg-white/5 transition-colors cursor-pointer group">
+<div class="flex justify-between items-start">
+<span class="text-on-surface-variant font-label-md text-label-md">Engagement</span>
+<span class="material-symbols-outlined text-primary-fixed group-hover:scale-110 transition-transform">vital_signs</span>
+</div>
+<div>
+<span class="font-headline-lg text-headline-lg text-on-surface">84%</span>
+</div>
+</div>
+<div class="glass-panel p-lg rounded-xl flex flex-col justify-between h-32 hover:bg-white/5 transition-colors cursor-pointer group">
+<div class="flex justify-between items-start">
+<span class="text-on-surface-variant font-label-md text-label-md">Quiz Average</span>
+<span class="material-symbols-outlined text-secondary-fixed-dim group-hover:scale-110 transition-transform">quiz</span>
+</div>
+<div>
+<span class="font-headline-lg text-headline-lg text-on-surface">88%</span>
+</div>
+</div>
+<div class="glass-panel p-lg rounded-xl flex flex-col justify-between h-32 ai-gradient opacity-90 hover:opacity-100 transition-opacity cursor-pointer group shadow-[0_10px_30px_rgba(221,2,0,0.2)]">
+<div class="flex justify-between items-start">
+<span class="text-on-primary-container font-label-md text-label-md font-semibold">Classes Today</span>
+<span class="material-symbols-outlined text-on-primary-container group-hover:scale-110 transition-transform">calendar_today</span>
+</div>
+<div>
+<span class="font-headline-lg text-headline-lg text-on-primary-container">3</span>
+</div>
+</div>
+</section>
+<!-- Main Content & Sidebar Split -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-xl">
+<!-- Today's Classes -->
+<section class="lg:col-span-2 space-y-md">
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-md !text-2xl">Today's Classes</h2>
+<!-- Class Card 1 -->
+<div class="glass-panel p-lg rounded-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-md">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-lg bg-surface-variant flex items-center justify-center border border-white/10 shrink-0">
+<span class="material-symbols-outlined text-primary-fixed text-2xl">data_object</span>
+</div>
+<div>
+<h3 class="font-body-lg text-body-lg font-semibold text-on-surface">Data Structures</h3>
+<p class="font-label-md text-label-md text-on-surface-variant flex items-center gap-2 mt-1">
+<span class="material-symbols-outlined text-[16px]">person</span> Dr. Alan Turing
+                            </p>
+</div>
+</div>
+<div class="flex items-center justify-between w-full md:w-auto gap-lg">
+<div class="text-right">
+<span class="block font-body-md text-body-md text-on-surface">10:00 AM</span>
+<span class="block font-label-sm text-label-sm text-on-surface-variant">Live in 15m</span>
+</div>
+<button class="px-6 py-2 rounded-full bg-primary text-on-primary font-label-md text-label-md font-bold hover:bg-primary-container transition-colors shadow-[0_0_15px_rgba(255,180,168,0.4)] hover:shadow-[0_0_25px_rgba(255,180,168,0.6)]">
+                            Join
+                        </button>
+</div>
+</div>
+<!-- Class Card 2 -->
+<div class="glass-panel p-lg rounded-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-md">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-lg bg-surface-variant flex items-center justify-center border border-white/10 shrink-0">
+<span class="material-symbols-outlined text-tertiary-fixed-dim text-2xl">psychology</span>
+</div>
+<div>
+<h3 class="font-body-lg text-body-lg font-semibold text-on-surface">AI Ethics</h3>
+<p class="font-label-md text-label-md text-on-surface-variant flex items-center gap-2 mt-1">
+<span class="material-symbols-outlined text-[16px]">person</span> Prof. Ada Lovelace
+                            </p>
+</div>
+</div>
+<div class="flex items-center justify-between w-full md:w-auto gap-lg">
+<div class="text-right">
+<span class="block font-body-md text-body-md text-on-surface">02:30 PM</span>
+<span class="block font-label-sm text-label-sm text-on-surface-variant">Room 404</span>
+</div>
+<button class="px-6 py-2 rounded-full bg-surface-variant text-on-surface font-label-md text-label-md border border-white/20 hover:bg-white/10 transition-colors">
+                            Details
+                        </button>
+</div>
+</div>
+</section>
+<!-- Analytics Sidebar -->
+<section class="lg:col-span-1 space-y-md">
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-md !text-2xl">Progress Trends</h2>
+<div class="glass-panel p-lg rounded-xl h-64 flex flex-col">
+<h3 class="font-label-md text-label-md text-on-surface-variant mb-4">Quiz Performance</h3>
+<div class="flex-1 flex items-end justify-between gap-2">
+<!-- Simulated Chart Bars -->
+<div class="w-full bg-primary/20 rounded-t-sm h-[40%] hover:bg-primary/40 transition-colors relative group">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-surface text-on-surface text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">70</div>
+</div>
+<div class="w-full bg-primary/20 rounded-t-sm h-[60%] hover:bg-primary/40 transition-colors relative group">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-surface text-on-surface text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">78</div>
+</div>
+<div class="w-full bg-primary/20 rounded-t-sm h-[50%] hover:bg-primary/40 transition-colors relative group">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-surface text-on-surface text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">72</div>
+</div>
+<div class="w-full bg-primary/20 rounded-t-sm h-[80%] hover:bg-primary/40 transition-colors relative group">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-surface text-on-surface text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">85</div>
+</div>
+<div class="w-full bg-primary rounded-t-sm h-[90%] shadow-[0_0_15px_rgba(255,180,168,0.4)] relative group">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-surface text-on-surface text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">88</div>
+</div>
+</div>
+<div class="flex justify-between mt-2 text-[10px] text-on-surface-variant">
+<span>W1</span><span>W2</span><span>W3</span><span>W4</span><span>W5</span>
+</div>
+</div>
+<div class="glass-panel p-lg rounded-xl">
+<h3 class="font-label-md text-label-md text-on-surface-variant mb-4">Attendance Rate</h3>
+<div class="flex items-center gap-4">
+<div class="relative w-16 h-16 shrink-0">
+<svg class="w-full h-full transform -rotate-90" viewbox="0 0 36 36">
+<path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="3"></path>
+<path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="theme('colors.primary')" stroke-dasharray="92, 100" stroke-width="3"></path>
+</svg>
+<div class="absolute inset-0 flex items-center justify-center font-label-sm text-label-sm font-bold text-on-surface">92%</div>
+</div>
+<div>
+<p class="font-body-md text-body-md text-on-surface">On track</p>
+<p class="text-xs text-on-surface-variant mt-1">You've attended 42 out of 45 sessions this semester.</p>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Floating ClassAI Bubble -->
+<div class="fixed bottom-24 md:bottom-8 right-6 z-50 animate-pulse-glow rounded-full">
+<button class="w-14 h-14 rounded-full ai-gradient shadow-xl flex items-center justify-center hover:scale-110 transition-transform duration-300">
+<span class="material-symbols-outlined text-on-primary-container text-2xl">smart_toy</span>
+</button>
+</div>
+<!-- BottomNavBar (Mobile) -->
+<nav class="md:hidden flex justify-around items-center h-20 px-4 pb-safe bg-surface/10 dark:bg-surface/12 text-primary font-label-sm-mobile text-label-sm-mobile fixed bottom-0 left-0 w-full z-50 rounded-t-xl backdrop-blur-2xl border-t border-white/10 shadow-[0_-10px_30px_rgba(0,0,0,0.3)]">
+<a class="flex flex-col items-center justify-center text-primary-fixed bg-primary-container rounded-full p-2 active:bg-white/5 tap-highlight-transparent" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant active:bg-white/5 tap-highlight-transparent" href="#">
+<span class="material-symbols-outlined">school</span>
+<span class="mt-1">Classes</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant active:bg-white/5 tap-highlight-transparent" href="#">
+<span class="material-symbols-outlined">smart_toy</span>
+<span class="mt-1">ClassAI</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant active:bg-white/5 tap-highlight-transparent" href="#">
+<span class="material-symbols-outlined">insights</span>
+<span class="mt-1">Analytics</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant active:bg-white/5 tap-highlight-transparent" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="mt-1">Profile</span>
+</a>
+</nav>
+</body></html>

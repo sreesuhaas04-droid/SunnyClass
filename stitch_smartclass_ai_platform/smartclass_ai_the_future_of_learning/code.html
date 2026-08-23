@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SmartClass AI - The Smarter Way to Run Online Classes</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                "on-primary-fixed": "#410000",
+                "on-primary": "#680100",
+                "glow-accent": "rgba(221, 2, 0, 0.3)",
+                "inverse-primary": "#c00200",
+                "on-tertiary-fixed": "#00174a",
+                "on-error": "#690005",
+                "background-base": "#1A0706",
+                "secondary": "#ffb4ab",
+                "on-surface": "#e2e2e2",
+                "surface-container-low": "#1a1c1c",
+                "primary": "#ffb4a8",
+                "surface-bright": "#38393a",
+                "secondary-fixed-dim": "#ffb4ab",
+                "tertiary-fixed": "#dbe1ff",
+                "error": "#ffb4ab",
+                "on-surface-variant": "#e9bcb5",
+                "surface-tint": "#ffb4a8",
+                "surface-container-highest": "#333535",
+                "primary-fixed-dim": "#ffb4a8",
+                "tertiary-container": "#0061fa",
+                "surface": "#121414",
+                "tertiary": "#b3c5ff",
+                "primary-container": "#dd0200",
+                "surface-dim": "#121414",
+                "on-background": "#e2e2e2",
+                "outline-variant": "#5e3f3a",
+                "on-secondary-fixed-variant": "#7c2d26",
+                "surface-container": "#1e2020",
+                "glass-border": "rgba(217, 217, 217, 0.15)",
+                "on-primary-fixed-variant": "#930100",
+                "primary-fixed": "#ffdad4",
+                "on-secondary": "#5e1612",
+                "on-secondary-fixed": "#400203",
+                "on-tertiary-container": "#eff0ff",
+                "tertiary-fixed-dim": "#b3c5ff",
+                "secondary-container": "#7c2d26",
+                "background": "#121414",
+                "inverse-on-surface": "#2f3131",
+                "outline": "#af8781",
+                "surface-container-high": "#282a2b",
+                "surface-container-lowest": "#0d0e0f",
+                "error-container": "#93000a",
+                "on-tertiary-fixed-variant": "#003ea7",
+                "on-primary-container": "#ffedea",
+                "inverse-surface": "#e2e2e2",
+                "on-secondary-container": "#ff9a8e",
+                "on-tertiary": "#002a77",
+                "on-error-container": "#ffdad6",
+                "surface-variant": "#333535",
+                "secondary-fixed": "#ffdad6"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "margin-desktop": "48px",
+                      "gutter-desktop": "24px",
+                      "margin-mobile": "20px",
+                      "unit": "8px",
+                      "gutter-tablet": "16px",
+                      "md": "16px",
+                      "lg": "24px",
+                      "gutter": "24px",
+                      "sm": "8px",
+                      "container-padding": "32px",
+                      "xxl": "96px",
+                      "xl": "48px",
+                      "xs": "4px"
+              },
+              "fontFamily": {
+                      "display-lg-mobile": ["Inter"],
+                      "headline-xl": ["Inter"],
+                      "label-sm": ["Inter"],
+                      "headline-lg": ["Inter"],
+                      "label-md": ["Inter"],
+                      "body-lg": ["Inter"],
+                      "body-md": ["Inter"],
+                      "display-lg": ["Inter"]
+              },
+              "fontSize": {
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                      "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "letterSpacing": "0em", "fontWeight": "400"}],
+                      "display-lg-mobile": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.04em", "fontWeight": "500"}],
+                      "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.06em", "fontWeight": "600"}],
+                      "display-lg": ["64px", {"lineHeight": "72px", "letterSpacing": "-0.04em", "fontWeight": "700"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "letterSpacing": "0.01em", "fontWeight": "400"}]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        /* Custom Liquid Glass utilities */
+        .glass-layer-0 { background-color: #1A0706; }
+        .glass-layer-1 { background: rgba(221, 2, 0, 0.05); backdrop-filter: blur(20px); border: 1px solid rgba(221, 2, 0, 0.15); }
+        .glass-layer-2 { background: rgba(221, 2, 0, 0.08); backdrop-filter: blur(40px); border: 1px solid rgba(217, 217, 217, 0.15); box-shadow: 0 20px 40px rgba(0,0,0,0.6); }
+        
+        .specular-highlight {
+            position: absolute; inset: 0; pointer-events: none; border-radius: inherit;
+            border-top: 1px solid rgba(217, 217, 217, 0.2); border-left: 1px solid rgba(217, 217, 217, 0.2);
+        }
+        
+        /* Subtle mesh gradient background for AI feel */
+        .mesh-bg {
+            background-color: #1A0706;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(221, 2, 0, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(255, 180, 168, 0.1) 0px, transparent 50%);
+        }
+    </style>
+</head>
+<body class="bg-background-base text-on-surface mesh-bg min-h-screen overflow-x-hidden selection:bg-primary-container selection:text-on-primary-container font-body-md text-body-md">
+<!-- Top Navigation (Transactional/Landing Page Intent - Simplified) -->
+<header class="fixed top-0 w-full z-50 glass-layer-1 h-16 flex items-center px-lg md:px-xl transition-all duration-300" id="main-header">
+<div class="flex items-center justify-between w-full max-w-7xl mx-auto">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+<span class="font-headline-lg text-headline-lg font-bold text-primary tracking-tighter">SmartClass AI</span>
+</div>
+<div class="hidden md:flex items-center gap-lg">
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors" href="#features">Features</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors" href="#privacy">Privacy</a>
+<button class="bg-primary-container text-on-primary-container font-label-md text-label-md px-lg py-sm rounded-full hover:bg-primary transition-colors shadow-md">Login</button>
+</div>
+<!-- Mobile Menu Toggle -->
+<button class="md:hidden text-on-surface-variant">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="pt-32 pb-xl px-lg md:px-xl max-w-7xl mx-auto space-y-xxl">
+<!-- Hero Section -->
+<section class="flex flex-col items-center text-center space-y-lg relative mt-16 md:mt-24">
+<!-- Decorative Glow -->
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-primary-container/20 blur-[100px] rounded-full pointer-events-none"></div>
+<h1 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg max-w-4xl relative z-10 text-on-surface">
+                The Smarter Way to <span class="text-primary relative inline-block">
+                    Run Online Classes
+                    <span class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-primary-container rounded-full"></span>
+</span>
+</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-3xl relative z-10">
+                AI-powered attendance, engagement analytics, automated learning insights, and an intelligent classroom assistant — all in one platform.
+            </p>
+<div class="flex flex-col sm:flex-row gap-md relative z-10 pt-sm">
+<button class="bg-primary-container text-on-primary-container font-label-md text-label-md px-container-padding py-md rounded-full hover:bg-primary transition-all shadow-[0_0_20px_rgba(221,2,0,0.4)] active:scale-95 flex items-center justify-center gap-sm">
+                    Get Started
+                    <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+<button class="glass-layer-2 text-primary font-label-md text-label-md px-container-padding py-md rounded-full hover:bg-primary-container/20 transition-all active:scale-95 relative overflow-hidden group">
+<span class="specular-highlight rounded-full"></span>
+<span class="relative z-10 flex items-center justify-center gap-sm">
+<span class="material-symbols-outlined text-[18px]">play_circle</span>
+                        View Demo
+                    </span>
+</button>
+</div>
+</section>
+<!-- Animated Dashboard Preview (Bento Grid Style) -->
+<section class="relative w-full max-w-5xl mx-auto">
+<div class="glass-layer-2 rounded-[32px] p-2 relative overflow-hidden">
+<span class="specular-highlight rounded-[32px]"></span>
+<!-- Browser/App Chrome -->
+<div class="flex items-center gap-2 p-4 border-b border-[rgba(217,217,217,0.1)] mb-2">
+<div class="w-3 h-3 rounded-full bg-surface-variant"></div>
+<div class="w-3 h-3 rounded-full bg-surface-variant"></div>
+<div class="w-3 h-3 rounded-full bg-surface-variant"></div>
+</div>
+<!-- Bento Grid Content -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-md p-md">
+<!-- Main Video Area -->
+<div class="md:col-span-2 glass-layer-1 rounded-xl relative overflow-hidden aspect-video group">
+<img class="w-full h-full object-cover opacity-80 mix-blend-luminosity group-hover:mix-blend-normal transition-all duration-700" data-alt="A high-quality, abstract visualization of a virtual classroom environment. The scene is rendered in a futuristic, sleek dark mode aesthetic with deep blacks and vibrant electric blue accents. It features a glowing, wireframe representation of multiple students engaged in a learning session, with subtle holographic data streams floating around them. The lighting is dramatic, emphasizing a premium, high-tech liquid glass feel." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCcuq_wJNAhiW97K_e7GdtQ9Cp81GFZUwpoBBE39qnZFmdvB_S0efpzaJtN4URgMTcGYcfx8ssTmeWhbcRRoFlagwEf9zgjLuAzjwfv37jVFawBIsXSDDlPOYyn9qDb3t9NiDBM9JpphgcVqZ4lZ0dyzMCQ-47dpymF4H9l6E5ChX026E19GUbJVVO3ezYqZDs7N0u3gswmxGkDg93Di_Aonh-Xh7ii-9NmRmzbY4MT3JF39N0i7BoyRQ"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background-base to-transparent"></div>
+<div class="absolute bottom-4 left-4 right-4 flex justify-between items-end">
+<div>
+<p class="font-label-md text-label-md text-primary">Live Session</p>
+<p class="font-headline-xl text-headline-xl text-on-surface">Advanced Physics 301</p>
+</div>
+<div class="glass-layer-2 px-3 py-1 rounded-full flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary-container animate-pulse"></span>
+<span class="font-label-sm text-label-sm">REC</span>
+</div>
+</div>
+</div>
+<!-- AI Assistant Panel -->
+<div class="glass-layer-1 rounded-xl p-lg flex flex-col gap-md relative">
+<div class="flex items-center gap-sm text-secondary">
+<span class="material-symbols-outlined">smart_toy</span>
+<span class="font-label-md text-label-md font-bold">ClassAI</span>
+</div>
+<div class="flex-1 space-y-4">
+<div class="bg-surface/50 rounded-lg p-3 text-sm text-on-surface-variant border border-[rgba(217,217,217,0.05)]">
+                                "Summarizing key concepts from the last 10 minutes..."
+                            </div>
+<div class="bg-secondary/10 rounded-lg p-3 text-sm text-secondary border border-secondary/20 ml-4">
+                                Generated 3 quiz questions based on momentum.
+                            </div>
+</div>
+<div class="h-1 w-full bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-secondary w-2/3 rounded-full"></div>
+</div>
+</div>
+<!-- Analytics Mini Card -->
+<div class="glass-layer-1 rounded-xl p-lg flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-on-surface-variant">Engagement Score</span>
+<span class="material-symbols-outlined text-primary">insights</span>
+</div>
+<div>
+<p class="font-display-lg text-display-lg text-primary">92%</p>
+<p class="text-sm text-secondary flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-[16px]">trending_up</span> +5% from last class
+                            </p>
+</div>
+</div>
+<!-- Attendance Mini Card -->
+<div class="glass-layer-1 rounded-xl p-lg flex items-center justify-between md:col-span-2">
+<div class="flex items-center gap-lg">
+<div class="w-12 h-12 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container">
+<span class="material-symbols-outlined">verified_user</span>
+</div>
+<div>
+<h3 class="font-headline-lg text-headline-lg-mobile text-on-surface">Auto-Attendance</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">34/35 students verified via secure facial recognition.</p>
+</div>
+</div>
+<button class="text-primary hover:text-primary-fixed transition-colors">
+<span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Feature Highlights -->
+<section class="py-xl" id="features">
+<div class="text-center mb-xl">
+<h2 class="font-headline-xl text-headline-xl text-on-surface mb-sm">Intelligent Infrastructure</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">Focus on teaching, let AI handle the administration and insights.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-lg">
+<!-- Feature 1 -->
+<div class="glass-layer-2 rounded-2xl p-lg relative group hover:-translate-y-2 transition-transform duration-300">
+<span class="specular-highlight rounded-2xl"></span>
+<div class="w-14 h-14 rounded-xl bg-primary-container/20 flex items-center justify-center mb-lg border border-primary-container/30">
+<span class="material-symbols-outlined text-primary text-3xl">face</span>
+</div>
+<h3 class="font-headline-lg text-headline-lg-mobile text-on-surface mb-sm">AI Attendance</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Frictionless, secure face verification happens silently in the background, logging attendance without interrupting the lesson flow.</p>
+</div>
+<!-- Feature 2 -->
+<div class="glass-layer-2 rounded-2xl p-lg relative group hover:-translate-y-2 transition-transform duration-300 delay-100">
+<span class="specular-highlight rounded-2xl"></span>
+<div class="w-14 h-14 rounded-xl bg-secondary/10 flex items-center justify-center mb-lg border border-secondary/20">
+<span class="material-symbols-outlined text-secondary text-3xl">monitoring</span>
+</div>
+<h3 class="font-headline-lg text-headline-lg-mobile text-on-surface mb-sm">Smart Engagement</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Real-time analytics track student participation, confusion signals, and attention levels, providing actionable insights instantly.</p>
+</div>
+<!-- Feature 3 -->
+<div class="glass-layer-2 rounded-2xl p-lg relative group hover:-translate-y-2 transition-transform duration-300 delay-200">
+<span class="specular-highlight rounded-2xl"></span>
+<div class="w-14 h-14 rounded-xl bg-tertiary/10 flex items-center justify-center mb-lg border border-tertiary/20">
+<span class="material-symbols-outlined text-tertiary text-3xl">psychology</span>
+</div>
+<h3 class="font-headline-lg text-headline-lg-mobile text-on-surface mb-sm">ClassAI Bot</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">An always-on intelligent assistant that summarizes lessons, answers student queries, and generates quizzes on the fly.</p>
+</div>
+</div>
+</section>
+<!-- Privacy Section -->
+<section class="py-xl glass-layer-1 rounded-[32px] px-lg md:px-xl flex flex-col md:flex-row items-center gap-xl relative overflow-hidden" id="privacy">
+<span class="specular-highlight rounded-[32px]"></span>
+<div class="absolute right-0 top-0 w-1/2 h-full bg-gradient-to-l from-surface-container-high/50 to-transparent pointer-events-none"></div>
+<div class="flex-1 z-10">
+<div class="inline-flex items-center gap-sm bg-surface-container-high px-3 py-1 rounded-full mb-md border border-[rgba(217,217,217,0.05)]">
+<span class="material-symbols-outlined text-[16px] text-secondary">lock</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Enterprise Grade Security</span>
+</div>
+<h2 class="font-headline-xl text-headline-xl text-on-surface mb-md">Privacy First. Always.</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-lg">
+                    We process all AI features locally where possible, and use end-to-end encryption for all cloud interactions. Facial verification data is hashed and never stored as raw images.
+                </p>
+<ul class="space-y-sm">
+<li class="flex items-center gap-md text-on-surface font-label-md text-label-md">
+<span class="material-symbols-outlined text-primary">check_circle</span> No raw video storage
+                    </li>
+<li class="flex items-center gap-md text-on-surface font-label-md text-label-md">
+<span class="material-symbols-outlined text-primary">check_circle</span> FERPA &amp; GDPR Compliant
+                    </li>
+<li class="flex items-center gap-md text-on-surface font-label-md text-label-md">
+<span class="material-symbols-outlined text-primary">check_circle</span> Transparent data policies
+                    </li>
+</ul>
+</div>
+<div class="flex-1 z-10 w-full relative">
+<div class="glass-layer-2 rounded-2xl p-lg border border-secondary/20 shadow-[0_0_50px_rgba(255,180,171,0.1)]">
+<div class="flex items-center justify-between mb-md border-b border-[rgba(217,217,217,0.1)] pb-sm">
+<span class="text-on-surface font-label-md text-label-md">Data Processing Log</span>
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+</div>
+<div class="space-y-3 font-mono text-xs text-on-surface-variant">
+<p>&gt; Initializing secure enclave...</p>
+<p class="text-secondary">&gt; Encryption key verified.</p>
+<p>&gt; Processing attendance vector hash...</p>
+<p class="text-secondary">&gt; Data purged from temporary memory.</p>
+<p>&gt; Status: Secure.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Final CTA -->
+<section class="py-xxl text-center relative">
+<div class="absolute inset-0 bg-primary-container/10 blur-[120px] rounded-full z-0 pointer-events-none"></div>
+<div class="relative z-10 space-y-lg max-w-2xl mx-auto">
+<h2 class="font-display-lg-mobile md:font-headline-xl text-display-lg-mobile md:text-headline-xl text-on-surface">Ready to upgrade your virtual classroom?</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Join forward-thinking educators using SmartClass AI to deliver premium learning experiences.</p>
+<div class="pt-sm">
+<button class="bg-primary-container text-on-primary-container font-label-md text-label-md px-xl py-lg rounded-full hover:bg-primary transition-all shadow-[0_0_30px_rgba(221,2,0,0.5)] active:scale-95 text-lg font-bold">
+                        Start Your Smart Classroom
+                    </button>
+</div>
+</div>
+</section>
+</main>
+<!-- Simple Footer -->
+<footer class="border-t border-[rgba(217,217,217,0.05)] py-lg px-lg text-center">
+<p class="font-label-sm text-label-sm text-on-surface-variant flex items-center justify-center gap-1">
+<span class="material-symbols-outlined text-[16px]">copyright</span> 2024 SmartClass AI. Premium Learning.
+        </p>
+</footer>
+<script>
+        // Simple scroll effect for header
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('main-header');
+            if (window.scrollY > 20) {
+                header.style.backgroundColor = 'rgba(26,7,6,0.8)';
+                header.style.boxShadow = '0 4px 30px rgba(0,0,0,0.5)';
+            } else {
+                header.style.backgroundColor = 'rgba(221,2,0,0.05)';
+                header.style.boxShadow = 'none';
+            }
+        });
+    </script>
+</body></html>

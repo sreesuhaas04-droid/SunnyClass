@@ -335,3 +335,4 @@ who skips `/api/join` and tries to open the class socket directly.
 ---
 
 MIT licensed.
+# SunnyClass

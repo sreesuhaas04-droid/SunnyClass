@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Faculty Dashboard | SmartClass AI</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "on-primary-fixed": "#410000",
+                "on-primary": "#680100",
+                "glow-accent": "rgba(221, 2, 0, 0.3)",
+                "inverse-primary": "#c00200",
+                "on-tertiary-fixed": "#00174a",
+                "on-error": "#690005",
+                "background-base": "#1A0706",
+                "secondary": "#ffb4ab",
+                "on-surface": "#e2e2e2",
+                "surface-container-low": "#1a1c1c",
+                "primary": "#ffb4a8",
+                "surface-bright": "#38393a",
+                "secondary-fixed-dim": "#ffb4ab",
+                "tertiary-fixed": "#dbe1ff",
+                "error": "#ffb4ab",
+                "on-surface-variant": "#e9bcb5",
+                "surface-tint": "#ffb4a8",
+                "surface-container-highest": "#333535",
+                "primary-fixed-dim": "#ffb4a8",
+                "tertiary-container": "#0061fa",
+                "surface": "#121414",
+                "tertiary": "#b3c5ff",
+                "primary-container": "#dd0200",
+                "surface-dim": "#121414",
+                "on-background": "#e2e2e2",
+                "outline-variant": "#5e3f3a",
+                "on-secondary-fixed-variant": "#7c2d26",
+                "surface-container": "#1e2020",
+                "glass-border": "rgba(217, 217, 217, 0.15)",
+                "on-primary-fixed-variant": "#930100",
+                "primary-fixed": "#ffdad4",
+                "on-secondary": "#5e1612",
+                "on-secondary-fixed": "#400203",
+                "on-tertiary-container": "#eff0ff",
+                "tertiary-fixed-dim": "#b3c5ff",
+                "secondary-container": "#7c2d26",
+                "background": "#121414",
+                "inverse-on-surface": "#2f3131",
+                "outline": "#af8781",
+                "surface-container-high": "#282a2b",
+                "surface-container-lowest": "#0d0e0f",
+                "error-container": "#93000a",
+                "on-tertiary-fixed-variant": "#003ea7",
+                "on-primary-container": "#ffedea",
+                "inverse-surface": "#e2e2e2",
+                "on-secondary-container": "#ff9a8e",
+                "on-tertiary": "#002a77",
+                "on-error-container": "#ffdad6",
+                "surface-variant": "#333535",
+                "secondary-fixed": "#ffdad6"
+        },
+        "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+        },
+        "spacing": {
+                "margin-desktop": "48px",
+                "gutter-desktop": "24px",
+                "margin-mobile": "20px",
+                "unit": "8px",
+                "gutter-tablet": "16px",
+                "md": "16px",
+                "lg": "24px",
+                "gutter": "24px",
+                "sm": "8px",
+                "container-padding": "32px",
+                "xxl": "96px",
+                "xl": "48px",
+                "xs": "4px"
+        },
+        "fontFamily": {
+                "headline-lg": [
+                        "Inter"
+                ],
+                "headline-xl": [
+                        "Inter"
+                ],
+                "body-lg": [
+                        "Inter"
+                ],
+                "display-lg-mobile": [
+                        "Inter"
+                ],
+                "label-md": [
+                        "Inter"
+                ],
+                "label-sm": [
+                        "Inter"
+                ],
+                "display-lg": [
+                        "Inter"
+                ],
+                "body-md": [
+                        "Inter"
+                ]
+        },
+        "fontSize": {
+                "headline-lg": [
+                        "32px",
+                        {
+                                "lineHeight": "40px",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "headline-xl": [
+                        "40px",
+                        {
+                                "lineHeight": "48px",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "body-lg": [
+                        "18px",
+                        {
+                                "lineHeight": "28px",
+                                "letterSpacing": "0em",
+                                "fontWeight": "400"
+                        }
+                ],
+                "display-lg-mobile": [
+                        "40px",
+                        {
+                                "lineHeight": "48px",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "700"
+                        }
+                ],
+                "label-md": [
+                        "14px",
+                        {
+                                "lineHeight": "20px",
+                                "letterSpacing": "0.04em",
+                                "fontWeight": "500"
+                        }
+                ],
+                "label-sm": [
+                        "12px",
+                        {
+                                "lineHeight": "16px",
+                                "letterSpacing": "0.06em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "display-lg": [
+                        "64px",
+                        {
+                                "lineHeight": "72px",
+                                "letterSpacing": "-0.04em",
+                                "fontWeight": "700"
+                        }
+                ],
+                "body-md": [
+                        "16px",
+                        {
+                                "lineHeight": "24px",
+                                "letterSpacing": "0.01em",
+                                "fontWeight": "400"
+                        }
+                ]
+        }
+},
+    },
+  }
+</script>
+<style>
+        body {
+            background-color: theme('colors.background-base');
+            color: theme('colors.on-background');
+            overflow-x: hidden;
+        }
+
+        /* Glassmorphism Utilities */
+        .glass-base {
+            background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
+            border: 1px solid theme('colors.glass-border');
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            box-shadow: inset 1px 1px 0px rgba(255,255,255,0.15), 0px 20px 40px rgba(0,0,0,0.4);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-surface {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid theme('colors.glass-border');
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: inset 1px 1px 0px rgba(255,255,255,0.1);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-surface:hover, .glass-base.hover-effect:hover {
+            transform: translateY(-4px) scale(1.01);
+            box-shadow: inset 1px 1px 0px rgba(255,255,255,0.25), 0px 25px 50px rgba(0,0,0,0.5);
+        }
+        
+        .glass-overlay {
+             background: rgba(255,255,255,0.08);
+            border: 1px solid theme('colors.glass-border');
+            backdrop-filter: blur(60px);
+            -webkit-backdrop-filter: blur(60px);
+            box-shadow: inset 1px 1px 0px rgba(255,255,255,0.2), 0px 40px 80px rgba(0,0,0,0.6);
+        }
+
+        .specular-highlight {
+            position: relative;
+            overflow: hidden;
+        }
+        .specular-highlight::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 100%);
+            pointer-events: none;
+            border-top-left-radius: inherit;
+            border-top-right-radius: inherit;
+        }
+
+        .specular-highlight::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0) 100%);
+            transform: skewX(-20deg);
+            transition: left 0.7s ease;
+            pointer-events: none;
+        }
+
+        .specular-highlight:hover::after {
+            left: 150%;
+        }
+        
+        .glow-mesh {
+            background: radial-gradient(circle at 50% 50%, theme('colors.glow-accent') 0%, rgba(0, 0, 0, 0) 60%);
+            animation: breathe 8s infinite alternate ease-in-out;
+        }
+
+        @keyframes breathe {
+            0% { transform: scale(1) opacity(0.5); }
+            100% { transform: scale(1.1) opacity(0.8); }
+        }
+
+        /* Animations */
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .stagger-1 { animation-delay: 0.1s; }
+        .stagger-2 { animation-delay: 0.2s; }
+        .stagger-3 { animation-delay: 0.3s; }
+        .stagger-4 { animation-delay: 0.4s; }
+        .stagger-5 { animation-delay: 0.5s; }
+
+        .pulse-btn {
+            animation: pulse-ring 2s infinite;
+        }
+
+        @keyframes pulse-ring {
+            0% { box-shadow: 0 0 0 0 rgba(221, 2, 0, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(221, 2, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(221, 2, 0, 0); }
+        }
+
+        .shimmer-btn {
+            position: relative;
+            overflow: hidden;
+        }
+        .shimmer-btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0) 100%);
+            transform: skewX(-20deg);
+            animation: shimmer 3s infinite linear;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            20% { left: 200%; }
+            100% { left: 200%; }
+        }
+
+        .chart-bar-anim {
+            transform-origin: bottom;
+            transform: scaleY(0);
+            animation: drawBar 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes drawBar {
+            to { transform: scaleY(1); }
+        }
+        
+        .list-slide-in {
+            opacity: 0;
+            transform: translateX(10px);
+            animation: slideInRight 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes slideInRight {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+    </style>
+</head>
+<body class="antialiased min-h-screen relative">
+<!-- Ambient Background Mesh -->
+<div class="fixed inset-0 z-0 pointer-events-none glow-mesh"></div>
+<!-- 
+    Shared Component: SideNavBar 
+    -->
+<nav class="hidden md:flex flex-col h-full p-lg bg-surface/5 dark:bg-surface/8 backdrop-blur-xl border border-white/10 shadow-xl fixed left-4 top-4 bottom-4 w-72 rounded-xl z-50 glass-base fade-in-up stagger-1">
+<div class="mb-xl flex items-center gap-md">
+<img alt="User profile photo" class="w-10 h-10 rounded-full border border-white/20 object-cover" data-alt="A small abstract 3D geometric icon representing artificial intelligence and learning. Floating crystal orb inside a sleek dark cube. Vibrant electric blue highlights. Professional, premium, liquid glass aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAI5hsslauDFvpfEbnhncZZUr6A8607gW-uYxwf8vToMGrPToNZNAF4tMBU5OGpC36OwceAjEFHzyjk6SwSnIPVO8yqxMZKXjEZ-tpEABq5VseMdNZBB54ur-gWL_AiIBJpKBAdw4-334ggTmTP2_G-BHE5TOjYTvmVVOcGsr1lK73HiO0J4q7brG4hW4SVlXS6LyS8theCCSvS6e5PfDwY7cEVADobEZUWqJ3qVCbYyY_r9Tzljtu24Q"/>
+<div>
+<h1 class="font-display-lg text-display-lg tracking-tighter text-primary dark:text-primary-fixed text-xl leading-tight">SmartClass AI</h1>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Premium Learning</p>
+</div>
+</div>
+<ul class="flex flex-col gap-sm flex-grow">
+<!-- Active: Dashboard -->
+<li>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-primary dark:text-primary-fixed font-bold border-r-2 border-primary hover:bg-white/5 hover:text-primary transition-all scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-body-md text-body-md">Dashboard</span>
+</a>
+</li>
+<!-- Inactive -->
+<li>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant dark:text-on-surface-variant/70 hover:bg-white/5 hover:text-primary transition-all scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="school">school</span>
+<span class="font-body-md text-body-md">Classes</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant dark:text-on-surface-variant/70 hover:bg-white/5 hover:text-primary transition-all scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="event_available">event_available</span>
+<span class="font-body-md text-body-md">Attendance</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant dark:text-on-surface-variant/70 hover:bg-white/5 hover:text-primary transition-all scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="insights">insights</span>
+<span class="font-body-md text-body-md">Analytics</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant dark:text-on-surface-variant/70 hover:bg-white/5 hover:text-primary transition-all scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="quiz">quiz</span>
+<span class="font-body-md text-body-md">Quizzes</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant dark:text-on-surface-variant/70 hover:bg-white/5 hover:text-primary transition-all scale-95 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="smart_toy">smart_toy</span>
+<span class="font-body-md text-body-md">ClassAI</span>
+</a>
+</li>
+</ul>
+<div class="mt-auto pt-lg border-t border-white/5">
+<button class="w-full mb-md py-sm rounded-lg bg-primary-container text-on-primary-container font-label-md text-label-md font-bold hover:brightness-110 transition-all shadow-[0_0_15px_rgba(221,2,0,0.3)] shimmer-btn">New Class</button>
+<ul class="flex flex-col gap-sm">
+<li>
+<a class="flex items-center gap-md px-md py-xs rounded-lg text-on-surface-variant dark:text-on-surface-variant/70 hover:bg-white/5 hover:text-primary transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="settings" style="font-size: 20px;">settings</span>
+<span class="font-label-sm text-label-sm">Settings</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-md px-md py-xs rounded-lg text-on-surface-variant dark:text-on-surface-variant/70 hover:bg-white/5 hover:text-primary transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="help" style="font-size: 20px;">help</span>
+<span class="font-label-sm text-label-sm">Support</span>
+</a>
+</li>
+</ul>
+</div>
+</nav>
+<!-- 
+    Shared Component: TopAppBar 
+    -->
+<header class="hidden md:flex fixed top-0 right-0 left-80 z-40 justify-between items-center px-lg bg-surface/5 dark:bg-surface/8 backdrop-blur-xl border-b border-white/10 shadow-md h-16 glass-base fade-in-up stagger-2">
+<div class="flex items-center gap-md">
+<h2 class="font-headline-lg text-headline-lg font-bold text-primary text-lg">SmartClass AI</h2>
+<div class="h-4 w-px bg-white/20 mx-sm"></div>
+<nav class="flex gap-sm">
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors cursor-pointer" href="#">Breadcrumbs</a>
+<span class="font-label-md text-label-md text-on-surface-variant/50">/</span>
+<span class="font-label-md text-label-md text-on-surface-variant">09:41 AM</span>
+</nav>
+</div>
+<div class="flex items-center gap-md">
+<div class="flex gap-sm mr-md">
+<button class="p-2 rounded-full text-on-surface-variant hover:text-primary hover:bg-white/5 transition-colors cursor-pointer"><span class="material-symbols-outlined" data-icon="dark_mode">dark_mode</span></button>
+<button class="p-2 rounded-full text-on-surface-variant hover:text-primary hover:bg-white/5 transition-colors cursor-pointer"><span class="material-symbols-outlined" data-icon="wifi">wifi</span></button>
+<button class="p-2 rounded-full text-on-surface-variant hover:text-primary hover:bg-white/5 transition-colors cursor-pointer"><span class="material-symbols-outlined" data-icon="videocam">videocam</span></button>
+<button class="p-2 rounded-full text-on-surface-variant hover:text-primary hover:bg-white/5 transition-colors cursor-pointer"><span class="material-symbols-outlined" data-icon="verified_user">verified_user</span></button>
+</div>
+<img alt="User avatar" class="w-8 h-8 rounded-full border border-white/20 object-cover" data-alt="A close up portrait of a professional academic professor in a modern sci-fi learning environment. Soft, cinematic lighting with subtle cyan rim light. Blurred futuristic classroom background. High-fidelity liquid glass aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXupJpEauoxVTitNXukMMxGyV9po9yxjnn9EQUVt1spKe1lfZkuoVkXOVnU7IzFJWAWpnLqXnYzBzWKbASwCtGl8aN7FZyyUwkiVTYOIrli2BCUCfqvLwiqfIrl3eRuyzfXRejsZU67AZ8iNggZ8ikfDqzUACkuv19atHG9EdaBOA8p7by0LZDsP6CFoj5z1iPXSKkhi3GV2plEo9BqGGJZqe61IAq14DRImNAQRzT8sZoXl7qQvPlEA"/>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="relative z-10 md:ml-80 pt-24 pb-32 md:pb-lg px-md md:px-xl min-h-screen flex flex-col gap-lg">
+<!-- Header Section -->
+<section class="flex flex-col md:flex-row justify-between items-start md:items-end gap-md fade-in-up stagger-3">
+<div>
+<h1 class="font-headline-xl text-headline-xl text-on-surface mb-sm tracking-tight">Good evening, Professor</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Here is the overview for your active sessions today.</p>
+</div>
+<button class="flex items-center gap-sm px-lg py-md rounded-xl bg-primary-container text-on-primary-container font-label-md text-label-md font-bold hover:brightness-110 transition-all shadow-[0_10px_20px_rgba(221,2,0,0.2)] pulse-btn">
+<span class="material-symbols-outlined" data-icon="play_arrow" data-weight="fill" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+                Start Live Class
+            </button>
+</section>
+<!-- Stats Bento Grid -->
+<section class="grid grid-cols-2 md:grid-cols-5 gap-md fade-in-up stagger-4">
+<!-- Stat Card 1 -->
+<div class="glass-surface rounded-xl p-md specular-highlight flex flex-col justify-between min-h-[100px]">
+<div class="flex justify-between items-start mb-sm">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Total Students</span>
+<span class="material-symbols-outlined text-primary/70 text-lg" data-icon="groups">groups</span>
+</div>
+<div class="font-headline-lg text-headline-lg text-on-surface counter" data-target="124">0</div>
+</div>
+<!-- Stat Card 2 -->
+<div class="glass-surface rounded-xl p-md specular-highlight flex flex-col justify-between min-h-[100px]">
+<div class="flex justify-between items-start mb-sm">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Present</span>
+<span class="material-symbols-outlined text-tertiary/70 text-lg" data-icon="how_to_reg">how_to_reg</span>
+</div>
+<div class="font-headline-lg text-headline-lg text-on-surface counter" data-target="108">0</div>
+</div>
+<!-- Stat Card 3 -->
+<div class="glass-surface rounded-xl p-md specular-highlight flex flex-col justify-between min-h-[100px]">
+<div class="flex justify-between items-start mb-sm">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Attendance Rate</span>
+<span class="material-symbols-outlined text-primary/70 text-lg" data-icon="percent">percent</span>
+</div>
+<div class="font-headline-lg text-headline-lg text-on-surface flex items-baseline gap-xs">
+<span class="counter" data-target="87">0</span><span class="text-lg text-on-surface-variant">%</span>
+</div>
+</div>
+<!-- Stat Card 4 -->
+<div class="glass-surface rounded-xl p-md specular-highlight flex flex-col justify-between min-h-[100px]">
+<div class="flex justify-between items-start mb-sm">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Engagement</span>
+<span class="material-symbols-outlined text-secondary/70 text-lg" data-icon="stacked_line_chart">stacked_line_chart</span>
+</div>
+<div class="font-headline-lg text-headline-lg text-on-surface flex items-baseline gap-xs">
+<span class="counter" data-target="78">0</span><span class="text-lg text-on-surface-variant">%</span>
+</div>
+</div>
+<!-- Stat Card 5 (Warning) -->
+<div class="glass-surface rounded-xl p-md specular-highlight flex flex-col justify-between min-h-[100px] border border-error/20 bg-error/5">
+<div class="flex justify-between items-start mb-sm">
+<span class="font-label-sm text-label-sm text-error uppercase tracking-wider">At Risk</span>
+<span class="material-symbols-outlined text-error text-lg" data-icon="warning">warning</span>
+</div>
+<div class="font-headline-lg text-headline-lg text-error counter" data-target="6">0</div>
+</div>
+</section>
+<!-- Main Dashboard Grid -->
+<section class="grid grid-cols-1 lg:grid-cols-3 gap-lg fade-in-up stagger-5">
+<!-- Chart Area (Spans 2 cols) -->
+<div class="lg:col-span-2 glass-base hover-effect rounded-2xl p-lg specular-highlight flex flex-col min-h-[400px]">
+<div class="flex justify-between items-center mb-lg">
+<h3 class="font-label-md text-label-md font-bold text-on-surface uppercase tracking-wider">Weekly Activity Overview</h3>
+<button class="p-sm rounded-lg glass-surface hover:bg-white/10 transition-colors text-on-surface-variant"><span class="material-symbols-outlined" data-icon="more_horiz">more_horiz</span></button>
+</div>
+<!-- Abstract Representation of Chart using flex layouts -->
+<div class="flex-grow flex items-end gap-sm relative pt-lg">
+<!-- Y-Axis labels -->
+<div class="absolute left-0 top-0 bottom-0 w-8 flex flex-col justify-between text-[10px] text-on-surface-variant/50 pb-8">
+<span>100</span>
+<span>75</span>
+<span>50</span>
+<span>25</span>
+<span>0</span>
+</div>
+<!-- Chart Area -->
+<div class="flex-grow flex items-end justify-between ml-10 h-full border-b border-white/10 pb-2 relative">
+<!-- Grid lines -->
+<div class="absolute inset-0 flex flex-col justify-between pointer-events-none pb-2 border-l border-white/10">
+<div class="border-t border-white/5 w-full"></div>
+<div class="border-t border-white/5 w-full"></div>
+<div class="border-t border-white/5 w-full"></div>
+<div class="border-t border-white/5 w-full"></div>
+<div></div>
+</div>
+<!-- Bars -->
+<div class="w-[10%] bg-primary/20 hover:bg-primary/40 rounded-t-sm h-[60%] relative group cursor-pointer transition-colors z-10 chart-bar-anim" style="animation-delay: 0.1s;"><div class="absolute -top-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 bg-surface px-2 py-1 rounded text-[10px] text-on-surface pointer-events-none transition-opacity">60%</div></div>
+<div class="w-[10%] bg-primary/20 hover:bg-primary/40 rounded-t-sm h-[80%] relative group cursor-pointer transition-colors z-10 chart-bar-anim" style="animation-delay: 0.2s;"><div class="absolute -top-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 bg-surface px-2 py-1 rounded text-[10px] text-on-surface pointer-events-none transition-opacity">80%</div></div>
+<div class="w-[10%] bg-primary/20 hover:bg-primary/40 rounded-t-sm h-[40%] relative group cursor-pointer transition-colors z-10 chart-bar-anim" style="animation-delay: 0.3s;"><div class="absolute -top-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 bg-surface px-2 py-1 rounded text-[10px] text-on-surface pointer-events-none transition-opacity">40%</div></div>
+<div class="w-[10%] bg-primary/40 hover:bg-primary/60 rounded-t-sm h-[95%] relative group cursor-pointer transition-colors shadow-[0_0_15px_rgba(255,180,168,0.2)] z-10 chart-bar-anim" style="animation-delay: 0.4s;"><div class="absolute -top-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 bg-surface px-2 py-1 rounded text-[10px] text-on-surface pointer-events-none transition-opacity">95%</div></div>
+<div class="w-[10%] bg-primary/20 hover:bg-primary/40 rounded-t-sm h-[70%] relative group cursor-pointer transition-colors z-10 chart-bar-anim" style="animation-delay: 0.5s;"><div class="absolute -top-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 bg-surface px-2 py-1 rounded text-[10px] text-on-surface pointer-events-none transition-opacity">70%</div></div>
+<div class="w-[10%] bg-primary/20 hover:bg-primary/40 rounded-t-sm h-[85%] relative group cursor-pointer transition-colors z-10 chart-bar-anim" style="animation-delay: 0.6s;"><div class="absolute -top-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 bg-surface px-2 py-1 rounded text-[10px] text-on-surface pointer-events-none transition-opacity">85%</div></div>
+<div class="w-[10%] bg-primary/20 hover:bg-primary/40 rounded-t-sm h-[50%] relative group cursor-pointer transition-colors z-10 chart-bar-anim" style="animation-delay: 0.7s;"><div class="absolute -top-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 bg-surface px-2 py-1 rounded text-[10px] text-on-surface pointer-events-none transition-opacity">50%</div></div>
+</div>
+</div>
+<!-- X-Axis Labels -->
+<div class="flex justify-between ml-10 mt-2 text-[10px] text-on-surface-variant/50 px-2 uppercase font-semibold">
+<span>Mon</span>
+<span>Tue</span>
+<span>Wed</span>
+<span>Thu</span>
+<span>Fri</span>
+<span>Sat</span>
+<span>Sun</span>
+</div>
+</div>
+<!-- Right Column Lists -->
+<div class="flex flex-col gap-md">
+<!-- At Risk Students -->
+<div class="glass-surface rounded-2xl p-md specular-highlight flex-grow flex flex-col">
+<div class="flex justify-between items-center mb-md pb-sm border-b border-white/5">
+<h3 class="font-label-md text-label-md font-bold text-on-surface flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-error shadow-[0_0_8px_rgba(255,180,171,0.8)]"></span>
+                            At-Risk Students
+                        </h3>
+</div>
+<ul class="flex flex-col gap-sm flex-grow overflow-y-auto">
+<li class="flex items-center justify-between p-sm rounded-lg hover:bg-white/5 transition-colors group cursor-pointer list-slide-in" style="animation-delay: 0.2s;">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center font-label-sm text-label-sm text-on-surface">JD</div>
+<div>
+<div class="font-label-md text-label-md text-on-surface group-hover:text-primary transition-colors">Jane Doe</div>
+<div class="text-[10px] text-on-surface-variant">CS101 - Missed 3 classes</div>
+</div>
+</div>
+<span class="px-2 py-1 rounded-full text-[10px] font-bold bg-error/10 border border-error/20 text-error">Warning</span>
+</li>
+<li class="flex items-center justify-between p-sm rounded-lg hover:bg-white/5 transition-colors group cursor-pointer list-slide-in" style="animation-delay: 0.3s;">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center font-label-sm text-label-sm text-on-surface">MS</div>
+<div>
+<div class="font-label-md text-label-md text-on-surface group-hover:text-primary transition-colors">Mike Smith</div>
+<div class="text-[10px] text-on-surface-variant">ENG202 - Low Engagement</div>
+</div>
+</div>
+<span class="px-2 py-1 rounded-full text-[10px] font-bold bg-error/10 border border-error/20 text-error">Warning</span>
+</li>
+</ul>
+</div>
+<!-- Upcoming Classes -->
+<div class="glass-surface rounded-2xl p-md specular-highlight flex-grow flex flex-col">
+<div class="flex justify-between items-center mb-md pb-sm border-b border-white/5">
+<h3 class="font-label-md text-label-md font-bold text-on-surface">Upcoming Classes</h3>
+</div>
+<ul class="flex flex-col gap-sm flex-grow overflow-y-auto">
+<li class="flex items-center gap-3 p-sm rounded-lg hover:bg-white/5 transition-colors cursor-pointer border border-transparent hover:border-primary/20 list-slide-in" style="animation-delay: 0.4s;">
+<div class="flex flex-col items-center justify-center w-12 h-12 rounded-lg bg-surface-container-high border border-white/5">
+<span class="font-label-sm text-label-sm text-primary">10:00</span>
+<span class="text-[9px] text-on-surface-variant uppercase">AM</span>
+</div>
+<div>
+<div class="font-label-md text-label-md text-on-surface font-semibold">Intro to Machine Learning</div>
+<div class="text-[11px] text-on-surface-variant flex items-center gap-1"><span class="material-symbols-outlined text-[12px]" data-icon="location_on">location_on</span> Room 304</div>
+</div>
+</li>
+<li class="flex items-center gap-3 p-sm rounded-lg hover:bg-white/5 transition-colors cursor-pointer border border-transparent hover:border-primary/20 opacity-70 list-slide-in" style="animation-delay: 0.5s;">
+<div class="flex flex-col items-center justify-center w-12 h-12 rounded-lg bg-surface-container-high border border-white/5">
+<span class="font-label-sm text-label-sm text-on-surface">01:00</span>
+<span class="text-[9px] text-on-surface-variant uppercase">PM</span>
+</div>
+<div>
+<div class="font-label-md text-label-md text-on-surface">Advanced Algorithms</div>
+<div class="text-[11px] text-on-surface-variant flex items-center gap-1"><span class="material-symbols-outlined text-[12px]" data-icon="language">language</span> Virtual Lab</div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</section>
+</main>
+<!-- 
+    Shared Component: BottomNavBar 
+    -->
+<nav class="md:hidden flex justify-around items-center h-20 px-4 pb-safe bg-surface/10 dark:bg-surface/12 backdrop-blur-2xl border-t border-white/10 shadow-[0_-10px_30px_rgba(0,0,0,0.3)] fixed bottom-0 left-0 w-full z-50 rounded-t-xl glass-base fade-in-up">
+<!-- Active: Home (Dashboard) -->
+<a class="flex flex-col items-center justify-center text-primary-fixed bg-primary-container rounded-full p-2 active:bg-white/5 tap-highlight-transparent min-w-[64px]" href="#">
+<span class="material-symbols-outlined" data-icon="home" data-weight="fill" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-label-sm-mobile text-label-sm-mobile mt-1 text-[10px]">Home</span>
+</a>
+<!-- Inactive -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant active:bg-white/5 tap-highlight-transparent min-w-[64px]" href="#">
+<span class="material-symbols-outlined" data-icon="school">school</span>
+<span class="font-label-sm-mobile text-label-sm-mobile mt-1 text-[10px]">Classes</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant active:bg-white/5 tap-highlight-transparent min-w-[64px]" href="#">
+<span class="material-symbols-outlined" data-icon="smart_toy">smart_toy</span>
+<span class="font-label-sm-mobile text-label-sm-mobile mt-1 text-[10px]">ClassAI</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant active:bg-white/5 tap-highlight-transparent min-w-[64px]" href="#">
+<span class="material-symbols-outlined" data-icon="insights">insights</span>
+<span class="font-label-sm-mobile text-label-sm-mobile mt-1 text-[10px]">Analytics</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant active:bg-white/5 tap-highlight-transparent min-w-[64px]" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-sm-mobile text-label-sm-mobile mt-1 text-[10px]">Profile</span>
+</a>
+</nav>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const counters = document.querySelectorAll('.counter');
+        const speed = 200;
+
+        counters.forEach(counter => {
+            const animate = () => {
+                const target = +counter.getAttribute('data-target');
+                const count = +counter.innerText;
+                const inc = target / speed;
+
+                if (count < target) {
+                    counter.innerText = Math.ceil(count + inc);
+                    setTimeout(animate, 10);
+                } else {
+                    counter.innerText = target;
+                }
+            };
+            
+            // simple intersection observer to start animation when visible
+            const observer = new IntersectionObserver((entries) => {
+                if(entries[0].isIntersecting) {
+                    animate();
+                    observer.disconnect();
+                }
+            });
+            observer.observe(counter);
+        });
+    });
+</script>
+</body></html>
