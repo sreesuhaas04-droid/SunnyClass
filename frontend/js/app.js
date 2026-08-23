@@ -27,6 +27,9 @@
     timerTimer: null,
   };
 
+  // How often heartbeats fire — kept in one place so elapsed_seconds always matches.
+  const HEARTBEAT_INTERVAL_SECS = 15;
+
   /* ---------------------------------------------------------------- utils */
   function toast(msg, type = 'info', ms = 4200) {
     const box = $('toasts');
@@ -355,7 +358,7 @@
         toast('The face on camera does not match your account.', 'error', 8000);
       });
 
-      state.heartbeatTimer = setInterval(sendHeartbeat, 15000);
+      state.heartbeatTimer = setInterval(sendHeartbeat, HEARTBEAT_INTERVAL_SECS * 1000);
       sendHeartbeat();
     }
 
@@ -595,7 +598,7 @@
         gaze_on_screen: st.gazeOnScreen,
         eye_aspect_ratio: st.ear,
         face_present: st.facePresent,
-        elapsed_seconds: 15,
+        elapsed_seconds: HEARTBEAT_INTERVAL_SECS,
       });
       updateRing(res.engagement_score);
       state.socket?.send({ type: 'engagement', score: res.engagement_score });

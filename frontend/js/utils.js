@@ -200,28 +200,8 @@ const Utils = (() => {
     };
   }
 
-  /* --- Simple API Client --- */
-  async function api(path, options = {}) {
-    const { method = 'GET', body, headers = {} } = options;
-
-    const token = localStorage.getItem('sc-token');
-    if (token) headers['Authorization'] = `Bearer ${token}`;
-    if (body) headers['Content-Type'] = 'application/json';
-
-    try {
-      const res = await fetch(`/api/${path}`, {
-        method,
-        headers,
-        body: body ? JSON.stringify(body) : undefined,
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Request failed');
-      return data;
-    } catch (err) {
-      console.error(`API ${method} /api/${path} failed:`, err);
-      throw err;
-    }
-  }
+  // API calls should go through window.API (see js/api.js) which handles
+  // JWT auth headers, 401 redirects, request timeouts, and ApiError correctly.
 
   /* --- Mobile Navigation Toggle --- */
   function initMobileNav() {
@@ -304,7 +284,6 @@ const Utils = (() => {
     timeAgo,
     debounce,
     throttle,
-    api,
     initMobileNav,
     initials,
     createEngagementRing,
