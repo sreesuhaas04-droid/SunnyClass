@@ -1,5 +1,5 @@
 /* ================================================================
-   SmartClass AI — Face recognition (browser detect → server match)
+   SunnyClass AI — Face recognition (browser detect → server match)
    face-api.js computes the 128-d descriptor locally; the raw video never
    leaves the device. The server owns the enrolled gallery and the match
    decision, so a client cannot assert someone else's roll number.
@@ -9,7 +9,7 @@ const FaceRecognition = (() => {
 
   // Models are vendored under /models so the classroom works offline, loads
   // fast on slow links, and doesn't depend on a third-party CDN staying up.
-  const MODEL_URL = window.SMARTCLASS_MODEL_URL || '/models';
+  const MODEL_URL = window.SUNNYCLASS_MODEL_URL || '/models';
   let modelsLoaded = false;
   let loading = null;
   let verifyTimer = null;
@@ -46,7 +46,7 @@ const FaceRecognition = (() => {
       }
       await tf.ready();
       backendName = tf.getBackend();
-      console.info(`[SmartClass] face inference backend: ${backendName}`);
+      console.info(`[SunnyClass] face inference backend: ${backendName}`);
 
       fire('progress', { stage: 'loading-models', pct: 10 });
       await faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL);

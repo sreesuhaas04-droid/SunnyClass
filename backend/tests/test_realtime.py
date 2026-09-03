@@ -10,10 +10,10 @@ def check(l, c, e=""):
 async def main():
     async with httpx.AsyncClient(base_url=BASE, timeout=30) as c:
         tk = lambda r: r.json()["token"]
-        t = tk(await c.post("/api/auth/login", json={"email":"ramesh.iyer@smartclass.edu","password":"teach1234"}))
-        s1 = tk(await c.post("/api/auth/login", json={"email":"aarav.sharma@student.smartclass.edu","password":"student123"}))
-        s2 = tk(await c.post("/api/auth/login", json={"email":"ananya.patel@student.smartclass.edu","password":"student123"}))
-        s3 = tk(await c.post("/api/auth/login", json={"email":"divya.thakur@student.smartclass.edu","password":"student123"}))
+        t = tk(await c.post("/api/auth/login", json={"email":"ramesh.iyer@sunnyclass.edu","password":"teach1234"}))
+        s1 = tk(await c.post("/api/auth/login", json={"email":"aarav.sharma@student.sunnyclass.edu","password":"student123"}))
+        s2 = tk(await c.post("/api/auth/login", json={"email":"ananya.patel@student.sunnyclass.edu","password":"student123"}))
+        s3 = tk(await c.post("/api/auth/login", json={"email":"divya.thakur@student.sunnyclass.edu","password":"student123"}))
         r = await c.get("/api/sessions/live", headers={"Authorization":f"Bearer {s1}"})
         sid = r.json()["sessions"][0]["session_id"]
         # admit student 2 through the gate (student 1 already admitted by seed)

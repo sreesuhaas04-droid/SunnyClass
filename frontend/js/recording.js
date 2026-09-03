@@ -1,5 +1,5 @@
 /* ================================================================
-   SmartClass AI — Class recording
+   SunnyClass AI — Class recording
    MediaRecorder capture with chunked buffering, live upload to the
    backend at stop, and a local download fallback if the upload fails.
    ================================================================ */
@@ -119,7 +119,7 @@ const Recorder = (() => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = filename || `smartclass-${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.webm`;
+    a.download = filename || `sunnyclass-${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.webm`;
     a.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   }

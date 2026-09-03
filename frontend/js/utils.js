@@ -1,5 +1,5 @@
 /* ================================================================
-   SmartClass AI — Shared Utilities
+   SunnyClass AI — Shared Utilities
    Helper functions used across all pages
    ================================================================ */
 

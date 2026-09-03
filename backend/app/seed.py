@@ -36,11 +36,11 @@ STUDENT_NAMES = [
 ]
 
 TEACHERS = [
-    ("Dr. Ramesh Iyer", "ramesh.iyer@smartclass.edu"),
-    ("Prof. Sunita Rao", "sunita.rao@smartclass.edu"),
-    ("Dr. Vikram Jha", "vikram.jha@smartclass.edu"),
-    ("Ms. Priya Nambiar", "priya.nambiar@smartclass.edu"),
-    ("Dr. Anil Patel", "anil.patel@smartclass.edu"),
+    ("Dr. Ramesh Iyer", "ramesh.iyer@sunnyclass.edu"),
+    ("Prof. Sunita Rao", "sunita.rao@sunnyclass.edu"),
+    ("Dr. Vikram Jha", "vikram.jha@sunnyclass.edu"),
+    ("Ms. Priya Nambiar", "priya.nambiar@sunnyclass.edu"),
+    ("Dr. Anil Patel", "anil.patel@sunnyclass.edu"),
 ]
 
 CLASSES = [
@@ -109,7 +109,7 @@ async def seed() -> None:
             roll = f"21CS{i + 1:03d}"
             handle = name.lower().replace(" ", ".").replace("dr.", "")
             s = User(
-                email=f"{handle}@student.smartclass.edu",
+                email=f"{handle}@student.sunnyclass.edu",
                 password_hash=hash_password("student123"),
                 full_name=name, role=Role.student.value, roll_number=roll,
                 department="Computer Science", section="A" if i < 15 else "B",
@@ -272,8 +272,8 @@ async def seed() -> None:
 
         print(f"• 1 LIVE session for {math.name} (room code {math.room_code})")
         print("\nSign in with:")
-        print("  teacher  ramesh.iyer@smartclass.edu / teach1234")
-        print("  student  aarav.sharma@student.smartclass.edu / student123  (roll 21CS001)")
+        print("  teacher  ramesh.iyer@sunnyclass.edu / teach1234")
+        print("  student  aarav.sharma@student.sunnyclass.edu / student123  (roll 21CS001)")
 
 
 async def main() -> None:

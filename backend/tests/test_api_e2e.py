@@ -15,17 +15,17 @@ def check(label, cond, extra=""):
 c = httpx.Client(base_url=BASE, timeout=30)
 
 # --- login as teacher and student ---
-r = c.post("/api/auth/login", json={"email": "ramesh.iyer@smartclass.edu", "password": "teach1234"})
+r = c.post("/api/auth/login", json={"email": "ramesh.iyer@sunnyclass.edu", "password": "teach1234"})
 check("teacher login", r.status_code == 200, r.text[:120])
 tt = r.json()["token"]; TH = {"Authorization": f"Bearer {tt}"}
 
-r = c.post("/api/auth/login", json={"email": "aarav.sharma@student.smartclass.edu", "password": "student123"})
+r = c.post("/api/auth/login", json={"email": "aarav.sharma@student.sunnyclass.edu", "password": "student123"})
 check("student login", r.status_code == 200)
 st = r.json()["token"]; SH = {"Authorization": f"Bearer {st}"}
 student = r.json()["user"]
 check("student has roll number", student["roll_number"] == "21CS001", student["roll_number"])
 
-r = c.post("/api/auth/login", json={"email": "aarav.sharma@student.smartclass.edu", "password": "wrong"})
+r = c.post("/api/auth/login", json={"email": "aarav.sharma@student.sunnyclass.edu", "password": "wrong"})
 check("bad password rejected", r.status_code == 401)
 
 r = c.get("/api/auth/me")
@@ -94,7 +94,7 @@ r = c.post("/api/join", headers=SH, json={"room_code": "NOPE-0000", "descriptor"
 check("unknown room code refused", r.json()["admitted"] is False)
 
 # a student NOT enrolled in the English class cannot join it
-r = c.post("/api/auth/login", json={"email": "divya.thakur@student.smartclass.edu", "password": "student123"})
+r = c.post("/api/auth/login", json={"email": "divya.thakur@student.sunnyclass.edu", "password": "student123"})
 OH = {"Authorization": f"Bearer {r.json()['token']}"}
 
 # --- heartbeats, violations ---

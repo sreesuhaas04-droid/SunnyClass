@@ -1,5 +1,5 @@
 /* ================================================================
-   SmartClass AI — Focus guard
+   SunnyClass AI — Focus guard
    Enforced fullscreen + tab-switch detection. Every infraction is
    reported to the backend so it lands on the teacher's live panel and
    in the student's attendance record.

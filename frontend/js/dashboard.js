@@ -1,5 +1,5 @@
 /* ================================================================
-   SmartClass AI — Dashboard
+   SunnyClass AI — Dashboard
    Every number and every chart below is computed server-side from real
    attendance rows; nothing here is mock data.
    ================================================================ */

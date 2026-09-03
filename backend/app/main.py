@@ -1,4 +1,4 @@
-"""SmartClass AI — FastAPI application entrypoint."""
+"""SunnyClass AI — FastAPI application entrypoint."""
 from __future__ import annotations
 
 import logging
@@ -18,7 +18,7 @@ from app.routers import attendance, auth, chat, classes, face, media, ws
 
 logging.basicConfig(level=logging.INFO,
                     format="%(asctime)s  %(levelname)-7s %(name)s  %(message)s")
-log = logging.getLogger("smartclass")
+log = logging.getLogger("sunnyclass")
 
 
 @asynccontextmanager
@@ -31,9 +31,9 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="SmartClass AI API",
+    title="SunnyClass AI API",
     description=(
-        "Backend for SmartClass AI — roll-number gated virtual classrooms with "
+        "Backend for SunnyClass AI — roll-number gated virtual classrooms with "
         "facial-recognition attendance, WebRTC mesh video, live captions, "
         "recordings, proctoring, and the SUNNY AI assistant."
     ),
@@ -79,6 +79,7 @@ app.include_router(attendance.router)
 app.include_router(attendance.analytics)
 app.include_router(media.router)
 app.include_router(media.rec_router)
+app.include_router(media.meetings_router)
 app.include_router(chat.router)
 app.include_router(ws.router)
 

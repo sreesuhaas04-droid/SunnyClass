@@ -1,5 +1,5 @@
 /* ================================================================
-   SmartClass AI — Live classroom orchestrator
+   SunnyClass AI — Live classroom orchestrator
    Flow:  auth → camera → face models → face verify → roll-number gate
           → admitted → fullscreen lock + mesh video + attendance loop
    ================================================================ */
@@ -299,7 +299,7 @@
 
     $('class-name').textContent = state.classroom?.name || 'Class';
     $('class-subject').textContent = state.classroom?.subject || '';
-    document.title = `${state.classroom?.name || 'Class'} · SmartClass AI`;
+    document.title = `${state.classroom?.name || 'Class'} · SunnyClass AI`;
     document.body.classList.toggle('is-host', state.isHost);
     if (!state.isHost) {
       document.querySelectorAll('.teacher-only').forEach(el => el.remove());
@@ -368,6 +368,10 @@
 
     // 6. SUNNY, tuned to this lecture
     SUNNY.init({ sessionId: state.sessionId });
+
+    // 7. meeting features — chat, whiteboard, polls, reactions
+    Meeting.init({ sock: state.socket, session: state.sessionId,
+                   user: state.user, teacher: state.isHost });
 
     wireToolbar();
     wirePanels();
@@ -481,11 +485,9 @@
   function wirePanels() {
     document.querySelectorAll('.side-tab').forEach(tab => {
       tab.addEventListener('click', () => {
-        document.querySelectorAll('.side-tab').forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-        ['people', 'attendance', 'transcript'].forEach(p => {
-          $(`panel-${p}`).hidden = p !== tab.dataset.panel;
-        });
+        const name = tab.dataset.panel;
+        if (name === 'chat') { Meeting.openChat(); return; }
+        Meeting.switchPanel(name);
       });
     });
   }
@@ -711,6 +713,9 @@
       if (k === 'm') $('btn-mic').click();
       if (k === 'c') $('btn-captions').click();
       if (k === 'h') $('btn-hand').click();
+      if (k === 't') $('btn-chat').click();
+      if (k === 'w') $('btn-whiteboard')?.click();
+      if (k === 'r') $('btn-reactions')?.click();
     });
   }
 

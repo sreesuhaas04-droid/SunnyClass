@@ -12,7 +12,7 @@ import httpx
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-BASE = os.environ.get("SMARTCLASS_URL", "http://localhost:8000")
+BASE = os.environ.get("SUNNYCLASS_URL", "http://localhost:8000")
 W = 78
 
 def rule(title=""):
@@ -34,7 +34,7 @@ async def main():
         # ---------------------------------------------------------------- 1
         rule("STEP 1 — Who is asking?")
         r = await c.post("/api/auth/login", json={
-            "email": "aarav.sharma@student.smartclass.edu", "password": "student123"})
+            "email": "aarav.sharma@student.sunnyclass.edu", "password": "student123"})
         r.raise_for_status()
         tok = r.json()["token"]; user = r.json()["user"]
         H = {"Authorization": f"Bearer {tok}"}

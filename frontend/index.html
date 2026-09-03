@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#1A0706">
-<meta name="description" content="SmartClass AI — virtual classrooms with facial-recognition attendance, live captions, and the SUNNY AI assistant.">
-<title>SmartClass AI — Intelligent Virtual Classrooms</title>
+<meta name="description" content="SunnyClass AI — virtual classrooms with facial-recognition attendance, live captions, and the SUNNY AI assistant.">
+<title>SunnyClass AI — Intelligent Virtual Classrooms</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -68,7 +68,7 @@
 <body>
 
 <nav class="nav">
-  <div class="brand">☀️ SmartClass <em>AI</em></div>
+  <div class="brand">☀️ SunnyClass <em>AI</em></div>
   <div class="nav-actions">
     <button class="icon-btn" id="btn-theme" title="Light / dark">🌙</button>
     <a class="btn btn-primary" href="#auth" style="text-decoration:none">Sign in</a>
@@ -79,7 +79,7 @@
   <div>
     <h1>The classroom that <span>takes its own attendance</span>.</h1>
     <p class="lead">
-      Students join with their roll number and their face. SmartClass AI verifies both against
+      Students join with their roll number and their face. SunnyClass AI verifies both against
       the roster before the meeting opens, keeps the camera on, tracks attention from gaze,
       captions the lecture live, and answers questions through SUNNY — your AI classmate.
     </p>
@@ -135,8 +135,8 @@
 
     <div class="demo-note">
       <strong>Demo accounts</strong><br>
-      Teacher — <code>ramesh.iyer@smartclass.edu</code> / <code>teach1234</code><br>
-      Student — <code>aarav.sharma@student.smartclass.edu</code> / <code>student123</code>
+      Teacher — <code>ramesh.iyer@sunnyclass.edu</code> / <code>teach1234</code><br>
+      Student — <code>aarav.sharma@student.sunnyclass.edu</code> / <code>student123</code>
       <button class="btn btn-ghost" id="fill-student" style="margin-top:9px;width:100%;font-size:12px;padding:7px">
         Fill student credentials
       </button>
@@ -169,7 +169,7 @@
   </div>
 </section>
 
-<footer>SmartClass AI · FastAPI + PostgreSQL + WebRTC · MIT licensed</footer>
+<footer>SunnyClass AI · FastAPI + PostgreSQL + WebRTC · MIT licensed</footer>
 
 <script src="js/api.js"></script>
 <script>
@@ -216,7 +216,7 @@
   };
 
   $('fill-student').onclick = () => {
-    $('f-email').value = 'aarav.sharma@student.smartclass.edu';
+    $('f-email').value = 'aarav.sharma@student.sunnyclass.edu';
     $('f-pass').value = 'student123';
   };
 

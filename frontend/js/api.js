@@ -1,5 +1,5 @@
 /* ================================================================
-   SmartClass AI — API client
+   SunnyClass AI — API client
    One place that knows how to talk to the FastAPI backend: auth token
    storage, JSON fetch with error surfacing, and the class WebSocket.
    ================================================================ */
@@ -10,8 +10,8 @@ const API = (() => {
   const USER_KEY = 'sc-user';
 
   // Same-origin by default (the backend serves this frontend). Override with
-  // window.SMARTCLASS_API_BASE = 'https://api.example.com' when split-deployed.
-  const base = () => (window.SMARTCLASS_API_BASE || '').replace(/\/$/, '');
+  // window.SUNNYCLASS_API_BASE = 'https://api.example.com' when split-deployed.
+  const base = () => (window.SUNNYCLASS_API_BASE || '').replace(/\/$/, '');
 
   /* ---------------- token & session ---------------- */
   const getToken = () => localStorage.getItem(TOKEN_KEY);
@@ -59,7 +59,7 @@ const API = (() => {
     } catch (err) {
       clearTimeout(timer);
       if (err.name === 'AbortError') throw new ApiError('Request timed out', 0, null);
-      throw new ApiError('Cannot reach the SmartClass server', 0, null);
+      throw new ApiError('Cannot reach the SunnyClass server', 0, null);
     }
     clearTimeout(timer);
 

@@ -9,15 +9,15 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
     # --- Core ---
-    APP_NAME: str = "SmartClass AI"
+    APP_NAME: str = "SunnyClass AI"
     ENV: str = "development"
     DEBUG: bool = True
-    SECRET_KEY: str = "change-me-in-production-smartclass-ai"
+    SECRET_KEY: str = "change-me-in-production-sunnyclass-ai"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7
 
     # --- Database ---
-    # postgresql+asyncpg://user:pass@host:5432/db   (sqlite+aiosqlite:///./smartclass.db also works)
-    DATABASE_URL: str = "postgresql+asyncpg://postgres:smartclass@localhost:5432/smartclass"
+    # postgresql+asyncpg://user:pass@host:5432/db   (sqlite+aiosqlite:///./sunnyclass.db also works)
+    DATABASE_URL: str = "postgresql+asyncpg://postgres:sunnyclass@localhost:5432/sunnyclass"
     DB_ECHO: bool = False
 
     # --- CORS ---

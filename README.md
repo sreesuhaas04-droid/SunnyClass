@@ -1,6 +1,6 @@
-# SmartClass AI — backend + database
+# SunnyClass AI — backend + database
 
-A complete FastAPI + PostgreSQL backend for the SmartClass AI frontend, plus the
+A complete FastAPI + PostgreSQL backend for the SunnyClass AI frontend, plus the
 frontend rewired to use it. Nothing in the app is mock data any more: every
 number on the dashboard is computed from real attendance rows.
 
@@ -38,8 +38,8 @@ Open <http://localhost:8000>.
 ### Option B — local Python
 
 ```bash
-# Postgres must be running and a `smartclass` database must exist
-createdb smartclass
+# Postgres must be running and a `sunnyclass` database must exist
+createdb sunnyclass
 
 cp backend/.env.example backend/.env           # edit DATABASE_URL if needed
 ./run.sh
@@ -48,15 +48,15 @@ cp backend/.env.example backend/.env           # edit DATABASE_URL if needed
 No PostgreSQL to hand? Set this in `backend/.env` and everything still works:
 
 ```
-DATABASE_URL=sqlite+aiosqlite:///./smartclass.db
+DATABASE_URL=sqlite+aiosqlite:///./sunnyclass.db
 ```
 
 ### Demo accounts (created by the seeder)
 
 | Role | Email | Password |
 |---|---|---|
-| Teacher | `ramesh.iyer@smartclass.edu` | `teach1234` |
-| Student | `aarav.sharma@student.smartclass.edu` | `student123` (roll `21CS001`) |
+| Teacher | `ramesh.iyer@sunnyclass.edu` | `teach1234` |
+| Student | `aarav.sharma@student.sunnyclass.edu` | `student123` (roll `21CS001`) |
 
 The seeder creates 5 teachers, 30 students (`21CS001`–`21CS030`), 5 classes with
 rosters, **4 weeks of attendance history**, and one **live** Mathematics session

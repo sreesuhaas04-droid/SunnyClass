@@ -98,9 +98,63 @@ class Room:
         self.captions: list[dict[str, Any]] = []
         self.lock = asyncio.Lock()
         self.peak = 0
+        # --- meeting features ------------------------------------------- #
+        self.polls: dict[str, dict[str, Any]] = {}     # poll_id -> poll state
+        self.chat_backlog: list[dict[str, Any]] = []   # last N meeting-chat msgs
+        self._pending_ghosts: list[Participant] = []   # dead peers awaiting peer-left
 
     def snapshot(self) -> list[dict[str, Any]]:
         return [p.public() for p in self.participants.values()]
+
+    def chat_tail(self, n: int = 50) -> list[dict[str, Any]]:
+        return self.chat_backlog[-n:]
+
+    # ---------------------------------------------------------------- polls
+    def create_poll(self, poll_id: str, question: str, options: list[str],
+                    created_by: str) -> dict[str, Any]:
+        poll = {
+            "pollId": poll_id,
+            "question": question[:300],
+            "options": [str(o)[:120] for o in options][:6],
+            "votes": {},           # peer_id -> option index
+            "voters": set(),       # user_ids that already voted
+            "createdBy": created_by,
+            "closed": False,
+            "reveal": False,
+        }
+        self.polls[poll_id] = poll
+        return self._poll_public(poll)
+
+    def vote_poll(self, poll_id: str, user_id: str, option: int) -> Optional[dict[str, Any]]:
+        poll = self.polls.get(poll_id)
+        if not poll or poll["closed"] or user_id in poll["voters"]:
+            return None
+        if not isinstance(option, int) or not (0 <= option < len(poll["options"])):
+            return None
+        poll["votes"][user_id] = option
+        poll["voters"].add(user_id)
+        return self._poll_public(poll)
+
+    def close_poll(self, poll_id: str) -> Optional[dict[str, Any]]:
+        poll = self.polls.get(poll_id)
+        if not poll:
+            return None
+        poll["closed"] = True
+        poll["reveal"] = True
+        return self._poll_public(poll)
+
+    def _poll_public(self, poll: dict[str, Any], reveal: Optional[bool] = None) -> dict[str, Any]:
+        counts = [0] * len(poll["options"])
+        for opt in poll["votes"].values():
+            counts[opt] += 1
+        total = len(poll["votes"])
+        show = poll["reveal"] if reveal is None else reveal
+        return {
+            "type": "poll", "pollId": poll["pollId"], "question": poll["question"],
+            "options": poll["options"], "closed": poll["closed"],
+            "total": total,
+            **({"counts": counts} if show else {"voted": total}),
+        }
 
     async def add(self, p: Participant) -> None:
         async with self.lock:
@@ -133,10 +187,18 @@ class Room:
                 dead.append(pid)
         if dead:
             # Hold the lock while cleaning up dead peers to avoid racing
-            # with concurrent add() / remove() calls.
+            # with concurrent add() / remove() calls. Announce the ghosts so
+            # every client's roster stays truthful.
             async with self.lock:
                 for pid in dead:
-                    self.participants.pop(pid, None)
+                    ghost = self.participants.pop(pid, None)
+                    if ghost:
+                        self._pending_ghosts.append(ghost)
+
+    def drain_ghosts(self) -> list[Participant]:
+        """Dead peers discovered mid-broadcast; caller sends their peer-left."""
+        ghosts, self._pending_ghosts = self._pending_ghosts, []
+        return ghosts
 
     async def broadcast_to_hosts(self, message: dict[str, Any]) -> None:
         payload = json.dumps(message)

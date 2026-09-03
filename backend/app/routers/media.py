@@ -17,12 +17,28 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.config import settings
 from app.core.database import get_db
 from app.deps import get_current_user
-from app.models import Caption, ClassSession, Recording, Role, User
+from app.models import Caption, ClassSession, MeetingChatMessage, Recording, Role, User
 from app.schemas import CaptionIn
 from app.services import llm
 from app.services.realtime import hub
 
 router = APIRouter(prefix="/api/captions", tags=["captions"])
+meetings_router = APIRouter(prefix="/api/meetings", tags=["meetings"])
+
+
+@meetings_router.get("/{session_id}/chat")
+async def meeting_chat_history(session_id: str, limit: int = Query(default=100, le=500, ge=1),
+                               user: User = Depends(get_current_user),
+                               db: AsyncSession = Depends(get_db)):
+    """In-meeting chat history for a session, newest last."""
+    rows = (await db.scalars(
+        select(MeetingChatMessage).where(MeetingChatMessage.session_id == session_id)
+        .order_by(MeetingChatMessage.id.desc()).limit(limit))).all()
+    return {"success": True, "total": len(rows),
+            "messages": [{"id": m.id, "senderId": m.sender_id, "senderName": m.sender_name,
+                          "senderRole": m.sender_role, "text": m.text,
+                          "ts": m.ts.isoformat() + "Z" if m.ts else None}
+                         for m in reversed(rows)]}
 
 STORAGE = Path(settings.STORAGE_DIR)
 (STORAGE / "recordings").mkdir(parents=True, exist_ok=True)

@@ -28,7 +28,7 @@ DEFAULT_MODELS = {
     "anthropic": "claude-sonnet-4-5",
 }
 
-SYSTEM_PROMPT = """You are SUNNY, the AI assistant inside SmartClass AI, a virtual
+SYSTEM_PROMPT = """You are SUNNY, the AI assistant inside SunnyClass AI, a virtual
 classroom platform for students and teachers.
 
 You do two jobs:
@@ -53,7 +53,7 @@ KB: dict[str, dict[str, Any]] = {
         "patterns": ["hello", "hi ", "hey", "good morning", "good evening",
                      "good afternoon", "namaste", "yo "],
         "responses": [
-            "Hey! ☀️ I'm SUNNY, your SmartClass assistant. Ask me about your "
+            "Hey! ☀️ I'm SUNNY, your SunnyClass assistant. Ask me about your "
             "attendance, your schedule, recordings — or anything from today's lecture.",
             "Hi there! I'm SUNNY. I can pull up your attendance, explain a concept "
             "from class, or summarise the lecture transcript. What do you need?",
@@ -151,7 +151,7 @@ KB: dict[str, dict[str, Any]] = {
     "network": {
         "patterns": ["slow", "lag", "bandwidth", "network", "buffer", "quality", "data"],
         "responses": [
-            "📶 SmartClass adapts to your connection automatically: 720p on 4G/WiFi, "
+            "📶 SunnyClass adapts to your connection automatically: 720p on 4G/WiFi, "
             "480p@15fps on 3G, 360p@10fps on 2G, and audio-only + captions below that. "
             "You can force a profile from the toolbar's quality menu.",
         ],
@@ -359,7 +359,7 @@ def fallback_answer(message: str, context: Optional[dict] = None) -> str:
                     f"engagement of {context.get('avg_engagement', '?')}%.")
         return (
             "I don't have a language model connected yet, so I can only answer "
-            "questions about SmartClass itself — your attendance, engagement, "
+            "questions about SunnyClass itself — your attendance, engagement, "
             "schedule, recordings, captions and network quality.\n\n"
             "To let me answer *any* question — maths, physics, code, exam prep — "
             "set `LLM_PROVIDER` and `LLM_API_KEY` in the backend `.env`. "

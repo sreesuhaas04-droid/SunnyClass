@@ -1,8 +1,12 @@
-"""WebSocket endpoint: WebRTC signaling relay + live class event bus.
+"""WebSocket endpoint: WebRTC signaling relay + live meeting event bus.
 
 One socket per participant carries everything — SDP/ICE relay, presence, live
 captions, hand raises, engagement pushes and proctor alerts — so a student on a
 weak connection maintains a single TCP/TLS session instead of polling.
+
+Meeting features on the same socket: in-meeting text chat (persisted), live
+polls (create / vote / close with per-user dedup), a whiteboard relay
+(stroke-batch + clear), emoji reactions, spotlight/pin and layout switching.
 """
 from __future__ import annotations
 
@@ -18,16 +22,27 @@ from app.core.config import settings
 from app.core.database import SessionLocal
 from app.deps import user_from_token
 from app.models import (
-    AttendanceRecord, Caption, ClassSession, Enrollment, Role, SessionStatus, User,
+    AttendanceRecord, Caption, ClassSession, Enrollment, MeetingChatMessage,
+    Role, SessionStatus, User,
 )
 from app.services.realtime import Participant, hub, profile_for
 
-log = logging.getLogger("smartclass.ws")
+log = logging.getLogger("sunnyclass.ws")
 
 router = APIRouter(tags=["realtime"])
 
 RELAY_TYPES = {"offer", "answer", "ice", "renegotiate", "track-update"}
-BROADCAST_TYPES = {"hand", "reaction", "chat", "media-state", "screen-share", "pin"}
+BROADCAST_TYPES = {"hand", "reaction", "media-state", "screen-share", "pin",
+                   "layout", "whiteboard"}
+
+# Server-side clamps so one participant cannot flood the room.
+MAX_TEXT = 500          # chat / caption text
+MAX_WB_POINTS = 600     # whiteboard points per stroke
+MAX_CHAT_BACKLOG = 50
+
+
+def _text(v: Any, limit: int = MAX_TEXT) -> str:
+    return str(v)[:limit] if isinstance(v, (str, int, float)) else ""
 
 
 @router.websocket("/ws/class/{session_id}")
@@ -82,6 +97,14 @@ async def class_socket(
                     "speakerId": cap.speaker_id, "isFinal": True,
                     "offsetMs": cap.offset_ms} for cap in reversed(recent)]
 
+        recent_chat = (await db.scalars(
+            select(MeetingChatMessage).where(MeetingChatMessage.session_id == session_id)
+            .order_by(MeetingChatMessage.id.desc()).limit(MAX_CHAT_BACKLOG))).all()
+        chat_backlog = [{"type": "chat", "messageId": m.id, "senderId": m.sender_id,
+                         "senderName": m.sender_name, "senderRole": m.sender_role,
+                         "text": m.text, "ts": m.ts.isoformat() + "Z" if m.ts else None}
+                        for m in reversed(recent_chat)]
+
     room = hub.room(session_id)
     peer_id = f"peer_{uuid.uuid4().hex[:12]}"
     participant = Participant(
@@ -102,6 +125,8 @@ async def class_socket(
         "iceServers": settings.ice_servers,
         "quality": profile_for(network, len(room.participants)),
         "captions": (backlog + room.captions)[-40:],
+        "chat": room.chat_tail(MAX_CHAT_BACKLOG) or chat_backlog,
+        "polls": [room._poll_public(p) for p in room.polls.values()],
         # The newcomer initiates offers to everyone already in the room; existing
         # peers wait for the offer. This keeps mesh negotiation collision-free.
         "shouldInitiate": [p["peerId"] for p in existing],
@@ -114,6 +139,11 @@ async def class_socket(
                           "quality": profile_for(network, len(room.participants))},
                          exclude=peer_id)
 
+    async def drain_ghosts() -> None:
+        for ghost in room.drain_ghosts():
+            await room.broadcast({"type": "peer-left", "peerId": ghost.peer_id,
+                                  "userId": ghost.user_id})
+
     try:
         while True:
             raw = await websocket.receive_text()
@@ -121,12 +151,14 @@ async def class_socket(
                 msg: dict[str, Any] = json.loads(raw)
             except json.JSONDecodeError:
                 continue
+            if not isinstance(msg, dict):
+                continue                      # arrays/strings/etc: ignore, don't drop
             mtype = msg.get("type")
 
             # ---- 1:1 signaling relay (server never inspects the SDP) ----- #
             if mtype in RELAY_TYPES:
                 target = msg.get("to")
-                if target:
+                if isinstance(target, str) and target:
                     await room.send_to(target, {
                         "type": mtype, "from": peer_id,
                         "payload": msg.get("payload"), "peer": participant.public(),
@@ -135,16 +167,98 @@ async def class_socket(
 
             # ---- live captions -------------------------------------------- #
             if mtype == "caption":
-                entry = {"type": "caption", "text": msg.get("text", ""),
+                entry = {"type": "caption", "text": _text(msg.get("text")),
                          "speaker": participant.name, "speakerId": participant.user_id,
                          "isFinal": bool(msg.get("isFinal")),
-                         "offsetMs": msg.get("offsetMs", 0)}
-                if entry["isFinal"]:
+                         "offsetMs": msg.get("offsetMs", 0) if isinstance(msg.get("offsetMs"), int) else 0}
+                if entry["isFinal"] and entry["text"]:
                     room.captions.append(entry)
                     # In-place truncation keeps the same list object so concurrent
                     # readers (e.g. the welcome-frame builder) never see a stale ref.
                     del room.captions[:-200]
+                    # Persist here so clients send each caption once (socket only).
+                    async with SessionLocal() as db:
+                        db.add(Caption(session_id=session_id, speaker_id=participant.user_id,
+                                       speaker_name=participant.name, text=entry["text"],
+                                       offset_ms=entry["offsetMs"]))
+                        await db.commit()
                 await room.broadcast(entry, exclude=peer_id)
+                await drain_ghosts()
+                continue
+
+            # ---- in-meeting text chat (persisted) -------------------------- #
+            if mtype == "chat":
+                text = _text(msg.get("text")).strip()
+                if not text:
+                    continue
+                chat_msg = {"type": "chat", "messageId": None, "senderId": participant.user_id,
+                            "senderName": participant.name, "senderRole": participant.role,
+                            "text": text}
+                async with SessionLocal() as db:
+                    row = MeetingChatMessage(session_id=session_id, sender_id=participant.user_id,
+                                             sender_name=participant.name,
+                                             sender_role=participant.role, text=text)
+                    db.add(row)
+                    await db.commit()
+                    await db.refresh(row)
+                    chat_msg["messageId"] = row.id
+                room.chat_backlog.append(chat_msg)
+                del room.chat_backlog[:-MAX_CHAT_BACKLOG]
+                await room.broadcast(chat_msg, exclude=peer_id)
+                await websocket.send_text(json.dumps(chat_msg))   # echo to sender
+                await drain_ghosts()
+                continue
+
+            # ---- polls ------------------------------------------------------ #
+            if mtype == "poll-create":
+                if participant.role == "student":
+                    continue
+                question = _text(msg.get("question"), 300).strip()
+                options = [str(o).strip()[:120] for o in (msg.get("options") or [])
+                           if isinstance(o, (str, int, float)) and str(o).strip()][:6]
+                if not question or len(options) < 2:
+                    continue
+                poll = room.create_poll(f"poll_{uuid.uuid4().hex[:10]}", question,
+                                        options, participant.user_id)
+                await room.broadcast(poll)
+                await drain_ghosts()
+                continue
+
+            if mtype == "poll-vote":
+                room.vote_poll(str(msg.get("pollId") or ""), participant.user_id,
+                               msg.get("option") if isinstance(msg.get("option"), int) else -1)
+                # students see only "voted" counts; results reveal on close
+                if room.polls.get(str(msg.get("pollId") or "")):
+                    await room.broadcast_to_hosts(
+                        room._poll_public(room.polls[msg.get("pollId")], reveal=True))
+                continue
+
+            if mtype == "poll-close":
+                if participant.role == "student":
+                    continue
+                closed = room.close_poll(str(msg.get("pollId") or ""))
+                if closed:
+                    await room.broadcast(closed)   # revealed with counts
+                    await drain_ghosts()
+                continue
+
+            # ---- whiteboard relay (batched strokes) ------------------------ #
+            if mtype == "whiteboard":
+                action = msg.get("action")
+                if action == "stroke":
+                    pts = msg.get("points")
+                    if not isinstance(pts, list) or not pts or len(pts) > MAX_WB_POINTS:
+                        continue
+                    payload = {"type": "whiteboard", "action": "stroke",
+                               "points": pts, "color": _text(msg.get("color"), 16) or "#E8B98F",
+                               "width": msg.get("width") if isinstance(msg.get("width"), (int, float)) else 3,
+                               "peerId": peer_id}
+                elif action in ("clear", "undo"):
+                    payload = {"type": "whiteboard", "action": action, "peerId": peer_id}
+                else:
+                    continue
+                await room.broadcast(payload, exclude=peer_id)
+                await drain_ghosts()
                 continue
 
             # ---- presence / media state ----------------------------------- #
@@ -165,7 +279,9 @@ async def class_socket(
                 continue
 
             if mtype == "engagement":
-                participant.engagement = int(msg.get("score", participant.engagement))
+                score = msg.get("score")
+                score = int(score) if isinstance(score, (int, float)) else participant.engagement
+                participant.engagement = max(0, min(100, score))
                 await room.broadcast_to_hosts({
                     "type": "engagement", "peerId": peer_id,
                     "userId": participant.user_id, "name": participant.name,
@@ -180,8 +296,12 @@ async def class_socket(
                 continue
 
             if mtype in BROADCAST_TYPES:
-                await room.broadcast({**msg, "peerId": peer_id,
-                                      "name": participant.name}, exclude=peer_id)
+                out = {**msg, "peerId": peer_id, "name": participant.name}
+                # pin/layout carry only the string payload fields
+                if mtype in ("pin", "layout"):
+                    out["target"] = _text(msg.get("target"), 60)
+                    out["mode"] = _text(msg.get("mode"), 24)
+                await room.broadcast(out, exclude=peer_id)
                 continue
 
             if mtype == "ping":

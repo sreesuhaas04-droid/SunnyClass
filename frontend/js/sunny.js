@@ -1,5 +1,5 @@
 /* ================================================================
-   SUNNY — SmartClass AI assistant
+   SUNNY — SunnyClass AI assistant
    Floating widget injected on every page. Talks to POST /api/chat, which
    grounds answers in the signed-in student's real attendance data and the
    live lecture transcript. Falls back to a local knowledge base when the
@@ -47,7 +47,7 @@ const SUNNY = (() => {
     if (/attend|present|absent/.test(l)) return LOCAL.attendance;
     if (/record|replay|download/.test(l)) return LOCAL.recording;
     if (/caption|transcript|subtitle/.test(l)) return LOCAL.captions;
-    return LOCAL.help + "\n\n_(I can't reach the SmartClass server right now, so that came from my offline notes.)_";
+    return LOCAL.help + "\n\n_(I can't reach the SunnyClass server right now, so that came from my offline notes.)_";
   }
 
   /* ---------------- UI ---------------- */
@@ -55,7 +55,7 @@ const SUNNY = (() => {
     const fab = document.createElement('button');
     fab.className = 'sunny-fab';
     fab.id = 'sunny-fab';
-    fab.setAttribute('aria-label', 'Open SUNNY, the SmartClass assistant');
+    fab.setAttribute('aria-label', 'Open SUNNY, the SunnyClass assistant');
     fab.innerHTML = '☀️';
     fab.addEventListener('click', toggle);
 

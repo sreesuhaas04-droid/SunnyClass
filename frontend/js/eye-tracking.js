@@ -1,5 +1,5 @@
 /* ================================================================
-   SmartClass AI — Gaze & attention
+   SunnyClass AI — Gaze & attention
    68-point landmarks → eye-aspect-ratio (drowsiness) + gaze direction
    (looking away). Produces the engagement score sent on each heartbeat.
    ================================================================ */

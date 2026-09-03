@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
 <meta name="theme-color" content="#1A0706">
-<title>Live Classroom · SmartClass AI</title>
+<title>Live Classroom · SunnyClass AI</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -84,10 +84,19 @@
     <aside class="side-panel glass" id="side-panel">
       <div class="side-tabs">
         <button class="side-tab active" data-panel="people">People</button>
+        <button class="side-tab" data-panel="chat">Chat</button>
         <button class="side-tab" data-panel="attendance">Attendance</button>
         <button class="side-tab" data-panel="transcript">Transcript</button>
       </div>
       <div class="side-body" id="panel-people"></div>
+      <div class="side-body chat-body" id="panel-chat" hidden>
+        <div class="chat-scroll" id="chat-scroll"></div>
+        <form class="chat-composer" id="chat-form">
+          <input id="chat-input" type="text" placeholder="Message the class…" maxlength="500"
+                 autocomplete="off" aria-label="Message the class">
+          <button class="btn btn-primary" type="submit" title="Send">➤</button>
+        </form>
+      </div>
       <div class="side-body" id="panel-attendance" hidden></div>
       <div class="side-body" id="panel-transcript" hidden></div>
     </aside>
@@ -102,9 +111,13 @@
     <button class="tool" id="btn-mic" title="Mute / unmute (M)"><span>🎤</span><label>Mic</label></button>
     <button class="tool locked" id="btn-cam" title="Camera stays on during class"><span>📷</span><label>On</label></button>
     <button class="tool" id="btn-captions" title="Captions (C)"><span>💬</span><label>CC</label></button>
+    <button class="tool" id="btn-chat" title="In-class chat (T)"><span>🗨️</span><label>Chat</label></button>
     <button class="tool" id="btn-hand" title="Raise hand (H)"><span>✋</span><label>Hand</label></button>
+    <button class="tool teacher-only" id="btn-poll" title="Create a poll"><span>📊</span><label>Poll</label></button>
+    <button class="tool teacher-only" id="btn-whiteboard" title="Whiteboard (W)"><span>🎨</span><label>Board</label></button>
     <button class="tool teacher-only" id="btn-screen" title="Share screen"><span>🖥️</span><label>Share</label></button>
     <button class="tool teacher-only" id="btn-record" title="Record class"><span>⏺️</span><label>Record</label></button>
+    <button class="tool" id="btn-reactions" title="Reactions (R)"><span>👍</span><label>React</label></button>
     <button class="tool" id="btn-quality" title="Video quality"><span>⚙️</span><label>Quality</label></button>
     <button class="tool" id="btn-sunny" title="Ask SUNNY"><span>☀️</span><label>SUNNY</label></button>
     <button class="tool danger" id="btn-leave" title="Leave class"><span>📴</span><label>Leave</label></button>
@@ -116,6 +129,56 @@
     <button data-q="low">Low 360p</button>
     <button data-q="minimal">Data saver 240p</button>
     <button data-q="audio">Audio only</button>
+  </div>
+
+  <div class="reaction-menu glass-float" id="reaction-menu" hidden>
+    <button data-r="👍">👍</button>
+    <button data-r="👏">👏</button>
+    <button data-r="❤️">❤️</button>
+    <button data-r="😂">😂</button>
+    <button data-r="🎉">🎉</button>
+    <button data-r="🤔">🤔</button>
+    <button data-r="🚀">🚀</button>
+  </div>
+
+  <div class="poll-composer glass-float" id="poll-composer" hidden>
+    <h3>📊 Create a poll</h3>
+    <input id="poll-question" type="text" placeholder="Ask a question…" maxlength="300">
+    <div id="poll-options">
+      <input type="text" class="poll-opt" placeholder="Option 1" maxlength="120">
+      <input type="text" class="poll-opt" placeholder="Option 2" maxlength="120">
+    </div>
+    <div class="poll-actions">
+      <button class="btn btn-ghost" id="poll-add-option">+ Add option</button>
+      <button class="btn btn-primary" id="poll-launch">Launch poll</button>
+    </div>
+  </div>
+
+  <div class="poll-card glass-float" id="poll-live" hidden>
+    <div class="poll-head">
+      <h3 id="poll-live-question"></h3>
+      <span class="poll-total" id="poll-live-total">0 votes</span>
+    </div>
+    <div class="poll-live-body" id="poll-live-body"></div>
+    <div class="poll-foot">
+      <span class="poll-status" id="poll-live-status"></span>
+      <button class="btn btn-ghost" id="poll-close-btn" hidden>Close poll &amp; show results</button>
+    </div>
+  </div>
+
+  <div class="whiteboard-wrap" id="whiteboard" hidden>
+    <canvas id="wb-canvas"></canvas>
+    <div class="wb-toolbar glass-float">
+      <button class="wb-color" data-c="#E8B98F" style="background:#E8B98F" title="Skin"></button>
+      <button class="wb-color" data-c="#FF5252" style="background:#FF5252" title="Red"></button>
+      <button class="wb-color" data-c="#2ECC71" style="background:#2ECC71" title="Green"></button>
+      <button class="wb-color" data-c="#4DA6FF" style="background:#4DA6FF" title="Blue"></button>
+      <button class="wb-color" data-c="#F5A623" style="background:#F5A623" title="Amber"></button>
+      <span class="wb-sep"></span>
+      <button class="wb-tool" id="wb-eraser" title="Undo my last stroke">↩️</button>
+      <button class="wb-tool" id="wb-clear" title="Clear board">🗑️</button>
+      <button class="wb-tool" id="wb-close" title="Hide board">✖</button>
+    </div>
   </div>
 </div>
 
@@ -141,6 +204,7 @@
 <script src="js/fullscreen.js"></script>
 <script src="js/captions.js"></script>
 <script src="js/recording.js"></script>
+<script src="js/meeting.js"></script>
 <script src="js/sunny.js"></script>
 <script src="js/app.js"></script>
 </body>

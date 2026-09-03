@@ -1,5 +1,5 @@
 /* ================================================================
-   SmartClass AI — Live captions
+   SunnyClass AI — Live captions
    Web Speech API transcription. Final lines go to the backend (stored +
    fanned out over the class socket) so every student sees captions even
    when their own mic is muted or their browser lacks speech support.
@@ -41,12 +41,9 @@ const CaptionEngine = (() => {
           transcript.push(entry);
           emit({ final: text, interim: '', own: true });
 
-          // Prefer the socket (sub-100ms fan-out); the POST persists it.
+          // Socket only — the server persists final captions from this path,
+          // so a single send reaches everyone AND the transcript.
           socket?.send({ type: 'caption', text, isFinal: true, offsetMs });
-          if (sessionId) {
-            API.captions.push({ session_id: sessionId, text, is_final: true, offset_ms: offsetMs,
-                                confidence: entry.confidence }).catch(() => {});
-          }
         } else {
           interim += text + ' ';
         }

@@ -1,5 +1,5 @@
 /* ================================================================
-   SmartClass AI — WebRTC mesh
+   SunnyClass AI — WebRTC mesh
    Peer-to-peer media (lowest possible latency, no media server) with
    adaptive encoding driven by the server's quality ladder.
    ================================================================ */
@@ -12,6 +12,7 @@ const MeshRTC = (() => {
   let iceServers = [{ urls: 'stun:stun.l.google.com:19302' }];
   let quality = null;
   let selfPeerId = null;
+  const MeshTrack = { userDisabled: false };   // camera mute is user-intent; quality steps don't touch it
   const handlers = { stream: [], leave: [], state: [], quality: [], stats: [] };
 
   const on = (evt, fn) => { (handlers[evt] ||= []).push(fn); return MeshRTC; };
@@ -158,6 +159,7 @@ const MeshRTC = (() => {
       } catch { /* device may refuse; bitrate cap below still applies */ }
     }
     if (q.profile === 'audio' && track) track.enabled = false;
+    else if (track && !MeshTrack.userDisabled) track.enabled = true;   // step back up re-enables
     for (const { pc } of peers.values()) applyEncodingLimits(pc);
   }
 

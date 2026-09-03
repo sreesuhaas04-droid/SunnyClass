@@ -3,8 +3,8 @@ services:
     image: postgres:16-alpine
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: smartclass
-      POSTGRES_DB: smartclass
+      POSTGRES_PASSWORD: sunnyclass
+      POSTGRES_DB: sunnyclass
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
@@ -21,7 +21,7 @@ services:
       db:
         condition: service_healthy
     environment:
-      DATABASE_URL: postgresql+asyncpg://postgres:smartclass@db:5432/smartclass
+      DATABASE_URL: postgresql+asyncpg://postgres:sunnyclass@db:5432/sunnyclass
       SECRET_KEY: ${SECRET_KEY:-change-me-in-production}
       LLM_PROVIDER: ${LLM_PROVIDER:-none}
       LLM_API_KEY: ${LLM_API_KEY:-}

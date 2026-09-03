@@ -1,4 +1,4 @@
-"""SmartClass AI — relational schema.
+"""SunnyClass AI — relational schema.
 
 Design notes
 ------------
@@ -275,6 +275,19 @@ class Recording(Base):
     transcript: Mapped[Optional[str]] = mapped_column(Text)
     summary: Mapped[Optional[str]] = mapped_column(Text)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+
+class MeetingChatMessage(Base):
+    """In-meeting text chat (separate from the SUNNY AI assistant chat)."""
+    __tablename__ = "meeting_chat_messages"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    session_id: Mapped[str] = mapped_column(ForeignKey("class_sessions.id", ondelete="CASCADE"), index=True)
+    sender_id: Mapped[str] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
+    sender_name: Mapped[str] = mapped_column(String(120))
+    sender_role: Mapped[str] = mapped_column(String(16), default="student")
+    text: Mapped[str] = mapped_column(Text, nullable=False)
+    ts: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, index=True)
 
 
 class ChatMessage(Base):
