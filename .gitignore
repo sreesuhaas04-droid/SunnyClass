@@ -9,3 +9,5 @@ logs/
 .venv/
 node_modules/
 .DS_Store
+# separate project living in this folder — not part of SunnyClass
+razorpay/
