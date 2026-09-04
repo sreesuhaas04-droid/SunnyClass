@@ -1,5 +1,8 @@
 FROM python:3.11-slim
 
+# NOTE: build with the REPO ROOT as the Docker context:
+#   docker build -f backend/Dockerfile .
+# (render.yaml is already configured this way — see dockerContext: . )
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     PIP_NO_CACHE_DIR=1
@@ -10,12 +13,12 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y --no-install-recommends curl \
     && rm -rf /var/lib/apt/lists/*
 
-COPY requirements.txt .
+COPY backend/requirements.txt .
 RUN pip install -r requirements.txt
 
-COPY app ./app
-# Copy the static frontend so the FastAPI static mount can serve it.
-COPY ../frontend ./frontend
+COPY backend/app ./app
+# Static frontend is served by the FastAPI mount at /  (needs repo-root context)
+COPY frontend ./frontend
 RUN mkdir -p storage/recordings
 
 EXPOSE 8000

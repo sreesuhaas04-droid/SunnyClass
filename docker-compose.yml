@@ -16,7 +16,9 @@ services:
       - "5432:5432"
 
   api:
-    build: ./backend
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
     depends_on:
       db:
         condition: service_healthy
