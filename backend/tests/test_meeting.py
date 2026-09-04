@@ -76,14 +76,21 @@ async def main():
     sid = sess["id"]
     print(f"session {sid}")
 
-    # students need attendance rows to pass the WS admission gate — the
-    # seeded class has them from prior joins; ensure via heartbeat like the
-    # app does after /api/join. For this test the seeded students already
-    # hold rows (seed created them for the live session), so skip if present.
-    # If the fresh session has none, create rows by heartbeating once.
-    for st in students:
-        api("POST", "/api/attendance/heartbeat", st,
-            {"session_id": sid, "engagement_score": 90, "elapsed_seconds": 15})
+    # admit each student through the REAL gate: re-enrol a deterministic
+    # descriptor for them, then /api/join (roll+face verified attendance row).
+    import numpy as np
+
+    def admit(token, seed):
+        d = np.random.default_rng(seed).normal(scale=0.1, size=128).round(6).tolist()
+        api("POST", "/api/face/enroll", token, {"descriptors": [d], "reenrol": True})
+        r = api("POST", "/api/join", token, {"session_id": sid, "descriptor": d})
+        assert r.get("admitted"), f"student not admitted: {r.get('reason')}"
+        return r
+
+    join1 = admit(students[0], 101)
+    join2 = admit(students[1], 102)
+    print("students admitted via the real face gate:",
+          join1["identity"]["rollNumber"], join2["identity"]["rollNumber"])
 
     async def connect(tok, network="4g"):
         ws = await websockets.connect(f"{WS}/ws/class/{sid}?token={tok}&network={network}")
@@ -203,6 +210,7 @@ async def main():
           "Welcome! Let's begin." in texts, f"{len(texts)} messages")
 
     # late joiner sees the chat backlog in the welcome frame
+    admit(students[2], 103)
     s3, w3 = await connect(students[2])
     check("welcome carried chat backlog", len(w3.get("chat", [])) >= 2,
           f"{len(w3.get('chat', []))} msgs replayed to late joiner")

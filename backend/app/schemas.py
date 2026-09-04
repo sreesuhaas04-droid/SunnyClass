@@ -130,6 +130,8 @@ class JoinIn(BaseModel):
     classroom has require_face_attendance enabled."""
     room_code: Optional[str] = None
     session_id: Optional[str] = None
+    meeting_id: Optional[str] = None
+    meeting_passcode: Optional[str] = None
     roll_number: Optional[str] = None
     descriptor: Optional[list[float]] = None
     device: Optional[DeviceIn] = None
@@ -152,6 +154,7 @@ class JoinOut(BaseModel):
 class FaceEnrollIn(BaseModel):
     descriptors: list[list[float]] = Field(min_length=1)
     quality: float = 1.0
+    reenrol: bool = False      # recovery path: replace THIS user's stale gallery
 
 
 class FaceVerifyIn(BaseModel):

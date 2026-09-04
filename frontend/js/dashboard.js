@@ -330,10 +330,11 @@
       $('btn-join').onclick = () => { location.href = `/app.html?session=${s.session_id}`; };
     } else {
       $('subgreeting').textContent = state.user.role === 'student'
-        ? 'No class is live right now. You will see a Join button here when one starts.'
-        : 'No live session. Start one from a class below.';
+        ? 'No class is live right now. Join with a Meeting ID below when your teacher shares one.'
+        : 'No live session. Host a meeting or start one from a class below.';
     }
 
+    wireMeetingButtons();
     renderRecordings();
 
     // table-view toggles (the relief rule for sub-3:1 status colours in light mode)
@@ -346,6 +347,115 @@
     };
     wire('comp-table-toggle', 'comp-table');
     wire('weekly-table-toggle', 'weekly-table');
+  }
+
+  /* ---------------- host / join meeting (Zoom-style) ---------------- */
+  let createdMeeting = null;   // {sessionId, meetingId, passcode, roomCode}
+
+  function wireMeetingButtons() {
+    const isTeacher = state.user.role !== 'student';
+
+    /* --- Host a meeting (teacher) --- */
+    if (isTeacher && state.classes.length) {
+      $('btn-host').hidden = false;
+      $('btn-host').onclick = openHostModal;
+    }
+
+    /* --- Join with meeting ID (everyone) --- */
+    $('btn-join-code').hidden = false;
+    $('btn-join-code').onclick = () => {
+      $('joincode-modal').hidden = false;
+      $('jc-msg').textContent = '';
+      setTimeout(() => $('jc-id').focus(), 60);
+    };
+    $('jc-cancel').onclick = () => { $('joincode-modal').hidden = true; };
+    $('jc-go').onclick = joinByMeetingId;
+    $('jc-pass').addEventListener('keydown', e => { if (e.key === 'Enter') joinByMeetingId(); });
+  }
+
+  function openHostModal() {
+    const sel = $('host-class');
+    sel.innerHTML = '';
+    state.classes.forEach(c => {
+      const opt = document.createElement('option');
+      opt.value = c.id;
+      opt.textContent = `${c.name} — ${c.subject || 'Class'}${c.live_session ? ' (live!)' : ''}`;
+      sel.appendChild(opt);
+    });
+    $('host-modal').hidden = false;
+  }
+  $('host-cancel') && ($('host-cancel').onclick = () => { $('host-modal').hidden = true; });
+  $('host-create') && ($('host-create').onclick = createMeeting);
+
+  async function createMeeting() {
+    const classId = $('host-class').value;
+    if (!classId) return;
+    $('host-create').disabled = true;
+    $('host-create').textContent = 'Starting…';
+    try {
+      const res = await API.sessions.start(classId, $('host-title').value.trim() || null);
+      const s = res.session;
+      createdMeeting = {
+        sessionId: s.id,
+        meetingId: res.meeting?.id || s.meeting_id || '—',
+        passcode: res.meeting?.passcode || s.meeting_passcode || '—',
+        roomCode: res.meeting?.room_code || '—',
+      };
+      $('host-modal').hidden = true;
+      $('share-id').textContent = createdMeeting.meetingId;
+      $('share-pass').textContent = createdMeeting.passcode;
+      $('share-room').textContent = createdMeeting.roomCode;
+      $('share-modal').hidden = false;
+      // A live class now exists — surface the join button too.
+      $('btn-join').hidden = false;
+      $('btn-join').textContent = `Join ${s.title || 'class'} →`;
+      $('btn-join').onclick = () => { location.href = `/app.html?session=${s.id}`; };
+    } catch (e) {
+      alert('Could not start the meeting: ' + e.message);
+    } finally {
+      $('host-create').disabled = false;
+      $('host-create').textContent = 'Start meeting';
+    }
+  }
+
+  const copyText = async (text, btn) => {
+    try { await navigator.clipboard.writeText(text); } catch {
+      const ta = document.createElement('textarea');
+      ta.value = text; document.body.appendChild(ta); ta.select();
+      document.execCommand('copy'); ta.remove();
+    }
+    const old = btn.textContent;
+    btn.textContent = 'Copied ✓';
+    setTimeout(() => { btn.textContent = old; }, 1400);
+  };
+  $('copy-id') && ($('copy-id').onclick = () => copyText($('share-id').textContent, $('copy-id')));
+  $('copy-pass') && ($('copy-pass').onclick = () => copyText($('share-pass').textContent, $('copy-pass')));
+  $('copy-room') && ($('copy-room').onclick = () => copyText($('share-room').textContent, $('copy-room')));
+  $('share-close') && ($('share-close').onclick = () => { $('share-modal').hidden = true; });
+  $('share-enter') && ($('share-enter').onclick = () => {
+    location.href = `/app.html?session=${createdMeeting.sessionId}`;
+  });
+
+  async function joinByMeetingId() {
+    const id = $('jc-id').value.trim().replace(/\s+/g, '');
+    const pass = $('jc-pass').value.trim().toUpperCase();
+    if (!id || !pass) { $('jc-msg').textContent = 'Enter both the meeting ID and passcode.'; return; }
+    $('jc-go').disabled = true;
+    try {
+      const res = await API.request('/api/meetings/validate', {
+        method: 'POST', body: { meeting_id: id, meeting_passcode: pass },
+      });
+      if (!res.valid) { $('jc-msg').textContent = res.reason || 'Meeting not found.'; return; }
+      $('joincode-modal').hidden = true;
+      // carry the passcode through so the /api/join gate can verify it again
+      sessionStorage.setItem('sc-join-code', id);
+      sessionStorage.setItem('sc-join-pass', pass);
+      location.href = `/app.html?session=${res.session.id}`;
+    } catch (e) {
+      $('jc-msg').textContent = 'Could not reach the server. Try again.';
+    } finally {
+      $('jc-go').disabled = false;
+    }
   }
 
   document.addEventListener('DOMContentLoaded', boot);

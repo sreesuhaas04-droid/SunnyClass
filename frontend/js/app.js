@@ -148,6 +148,8 @@
       gateMsg('Ready when you are.', 'ok');
       $('gate-action').textContent = 'Start the class';
       $('gate-action').disabled = false;
+      // Fullscreen needs a user gesture — lock in the host's click too.
+      FullscreenGuard.requestFullscreen().catch(() => {});
       $('gate-action').onclick = () => joinAsHost();
       return;
     }
@@ -215,6 +217,34 @@
     }
   }
 
+  /** One-tap recovery when the stored enrolment no longer matches: wipe the
+   *  stale gallery for THIS account, capture fresh samples from the live
+   *  camera, then re-run the verify+join gates. Proctor-logged server-side. */
+  async function reenrollAndJoin() {
+    $('gate-action').disabled = true;
+    $('gate-action').textContent = 'Re-capturing…';
+    setStep('face', 'active');
+    document.querySelector('.gate-preview')?.classList.add('scanning');
+    try {
+      await API.face.reset();                       // clears this account's descriptors
+      const res = await FaceRecognition.enroll($('gate-video'), 3, (p) => {
+        gateMsg(p.issue
+          ? `Adjust your position (${p.issue.replace('_', ' ')})… ${p.captured}/${p.total}`
+          : `Captured ${p.captured} of ${p.total}…`);
+      }, true);                                     // reenrol=true → server replaces gallery + proctor-logs
+      if (!res.success) throw new Error(res.reason || 'no face detected');
+      gateMsg('Face re-captured ✓ Verifying…', 'ok');
+    } catch (err) {
+      document.querySelector('.gate-preview')?.classList.remove('scanning');
+      gateMsg(`Re-capture failed: ${err.message}. Improve lighting and retry.`, 'error');
+      $('gate-action').textContent = 'Re-capture my face';
+      $('gate-action').disabled = false;
+      return;
+    }
+    document.querySelector('.gate-preview')?.classList.remove('scanning');
+    await verifyAndJoin();
+  }
+
   async function verifyAndJoin() {
     setStep('face', 'active');
     $('gate-action').disabled = true;
@@ -251,11 +281,18 @@
 
     let res;
     try {
-      res = await API.join({
+      // If the student arrived through the meeting-ID join, re-present the
+      // meeting credentials so the server gate re-validates them.
+      const joinPayload = {
         session_id: state.sessionId || null,
         room_code: state.roomCode || null,
         descriptor: described.descriptor,
-      });
+      };
+      const mCode = sessionStorage.getItem('sc-join-code');
+      const mPass = sessionStorage.getItem('sc-join-pass');
+      if (mCode) { joinPayload.meeting_id = mCode; joinPayload.meeting_passcode = mPass; }
+      res = await API.join(joinPayload);
+      if (res.admitted) { sessionStorage.removeItem('sc-join-code'); sessionStorage.removeItem('sc-join-pass'); }
     } catch (err) {
       setStep('roll', 'fail');
       gateMsg(err.message, 'error');
@@ -272,6 +309,17 @@
         : res.reason === 'enrollment_required'
           ? 'No students have enrolled their face for this class yet.'
           : res.reason;
+
+      // Face no longer matches the stored enrolment (old photo, bad light, or
+      // a re-seeded gallery). Offer a one-tap re-enrol — the server keeps the
+      // match decision, so this only enrols THIS account's own camera feed.
+      if (res.reason && res.reason.startsWith('Face not recognised')) {
+        gateMsg('Your stored face enrolment no longer matches. Re-capture your face to continue.', 'error');
+        $('gate-action').textContent = 'Re-capture my face';
+        $('gate-action').disabled = false;
+        $('gate-action').onclick = reenrollAndJoin;
+        return;
+      }
       gateMsg(reason, 'error');
       $('gate-action').textContent = 'Try again';
       $('gate-action').disabled = false;
@@ -285,6 +333,12 @@
     state.classroom = res.classroom;
     state.sessionId = res.session.id;
     state.isHost = state.user.id === res.session.host_id || state.user.role !== 'student';
+
+    // Fullscreen needs a user gesture — request it NOW, inside the click,
+    // before any async classroom setup can consume the gesture.
+    if (state.classroom?.enforce_fullscreen !== false) {
+      FullscreenGuard.requestFullscreen().catch(() => {});
+    }
 
     $('gate-action').textContent = 'Enter classroom';
     $('gate-action').disabled = false;
@@ -305,11 +359,17 @@
       document.querySelectorAll('.teacher-only').forEach(el => el.remove());
     }
 
-    // 1. lock the screen down (student only)
-    if (!state.isHost && state.classroom?.enforce_fullscreen !== false) {
-      await FullscreenGuard.requestFullscreen();
-      FullscreenGuard.start(state.sessionId);
+    // 1. lock the screen down — everyone goes fullscreen for a real meeting;
+    //    students additionally get strict re-lock + tab-switch lockdown.
+    const strictStudent = !state.isHost && state.classroom?.enforce_fullscreen !== false;
+    try { await FullscreenGuard.requestFullscreen(); } catch { /* degraded below */ }
+    if (strictStudent) {
+      FullscreenGuard.start(state.sessionId, true);
       FullscreenGuard.on(onViolation);
+    } else {
+      // Teacher/admin still keep the meeting fullscreen + wake lock, but no
+      // violation overlay or gesture re-lock (they run the room).
+      FullscreenGuard.start(state.sessionId, false);
     }
 
     // 2. open the class socket
@@ -471,6 +531,15 @@
     });
     sock.on('violation', (msg) => {
       if (state.isHost) toast(`${msg.name} — ${msg.kind.replace('_', ' ')} (${msg.count})`, 'warning');
+    });
+    sock.on('monitor', (msg) => {
+      // SUNNY's live supervision findings — teacher-facing panel + toasts.
+      if (!state.isHost) return;
+      (msg.findings || []).forEach(f => {
+        const icon = f.severity === 'critical' ? '🚨' : '⚠️';
+        toast(`${icon} SUNNY: ${f.name} — ${f.text}`, f.severity === 'critical' ? 'error' : 'warning', 6000);
+      });
+      refreshAttendancePanel();      // statuses may have been auto-recomputed
     });
     sock.on('class-ended', () => {
       toast('The teacher ended the class.', 'info', 6000);

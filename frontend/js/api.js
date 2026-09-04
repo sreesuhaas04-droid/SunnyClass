@@ -136,8 +136,8 @@ const API = (() => {
 
   const face = {
     status: () => get('/api/face/status'),
-    enroll: (descriptors, quality = 1.0) =>
-      post('/api/face/enroll', { descriptors, quality }),
+    enroll: (descriptors, quality = 1.0, reenrol = false) =>
+      post('/api/face/enroll', { descriptors, quality, reenrol }),
     verify: (descriptor, sessionId) =>
       post('/api/face/verify', { descriptor, session_id: sessionId || null }),
     reset: () => del('/api/face/enroll'),

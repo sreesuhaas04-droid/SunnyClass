@@ -130,6 +130,10 @@ class CachedStatic(StaticFiles):
         path = str(kwargs.get("full_path") or (args[0] if args else ""))
         if "/models/" in path or "/vendor/" in path:
             response.headers["Cache-Control"] = "public, max-age=31536000, immutable"
+        elif path.endswith(".html") or not path.endswith((".css", ".js", ".png", ".svg",
+                                                         ".ico", ".woff2", ".json", ".wasm")):
+            # HTML (and anything unnamed) must always be fresh — no stale branding.
+            response.headers["Cache-Control"] = "no-cache, must-revalidate"
         elif path.endswith((".css", ".js")):
             response.headers["Cache-Control"] = "public, max-age=3600"
         return response

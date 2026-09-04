@@ -124,6 +124,16 @@ async def heartbeat(payload: HeartbeatIn, user: User = Depends(get_current_user)
     record = await db.scalar(select(AttendanceRecord).where(
         AttendanceRecord.session_id == session.id, AttendanceRecord.student_id == user.id))
     if not record:
+        # The roll-number + face gates at /api/join create this row. Heartbeats
+        # only continue attendance for students who were actually admitted —
+        # they must never mint attendance for anyone who skipped the gate.
+        cls = await db.get(Classroom, session.class_id)
+        if user.role not in (Role.teacher.value, Role.admin.value) and user.id != session.host_id:
+            enrolled = await db.scalar(select(Enrollment).where(
+                Enrollment.class_id == session.class_id, Enrollment.student_id == user.id))
+            reason = ("not_admitted: join through the class gate first"
+                      if enrolled else "not_enrolled: you are not on this class roster")
+            raise HTTPException(status_code=403, detail=reason)
         record = await get_or_create_record(db, session, user, "roll", 0.0)
 
     await apply_heartbeat(
@@ -152,6 +162,11 @@ async def violation(payload: ProctorEventIn, user: User = Depends(get_current_us
     record = await db.scalar(select(AttendanceRecord).where(
         AttendanceRecord.session_id == session.id, AttendanceRecord.student_id == user.id))
     if not record:
+        # Violations apply to admitted students' records only — same gate as
+        # heartbeat, so an outsider cannot pollute a class they never joined.
+        if user.role not in (Role.teacher.value, Role.admin.value) and user.id != session.host_id:
+            raise HTTPException(status_code=403,
+                                detail="not_admitted: no attendance record for this session")
         record = await get_or_create_record(db, session, user, "roll", 0.0)
 
     await apply_violation(db, record, payload.kind, payload.severity, payload.detail)

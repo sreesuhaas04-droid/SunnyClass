@@ -11,6 +11,7 @@ Design notes
 """
 from __future__ import annotations
 
+import random
 import uuid
 from datetime import datetime, timezone
 from enum import Enum as PyEnum
@@ -27,6 +28,17 @@ from app.core.database import Base
 
 def _id(prefix: str) -> str:
     return f"{prefix}_{uuid.uuid4().hex[:16]}"
+
+
+def _meeting_code() -> str:
+    """Zoom-style 9-digit meeting ID, e.g. 841 203 966."""
+    return f"{random.randint(100, 999)}{random.randint(100, 999)}{random.randint(100, 999)}"
+
+
+def _passcode() -> str:
+    """6-char alphanumeric passcode, unambiguous characters only."""
+    alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
+    return "".join(random.choices(alphabet, k=6))
 
 
 def utcnow() -> datetime:
@@ -164,7 +176,6 @@ class Enrollment(Base):
 
 
 class ClassSession(Base):
-    """One live meeting instance of a classroom."""
     __tablename__ = "class_sessions"
 
     id: Mapped[str] = mapped_column(String(40), primary_key=True, default=lambda: _id("ses"))
@@ -176,6 +187,12 @@ class ClassSession(Base):
     ended_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True))
     peak_participants: Mapped[int] = mapped_column(Integer, default=0)
     settings: Mapped[dict] = mapped_column(JSON, default=dict)
+
+    # Zoom-style shareable credentials: "Meeting ID 9-digit" + 6-char passcode.
+    meeting_code: Mapped[Optional[str]] = mapped_column(String(16), index=True,
+                                                        default=lambda: _meeting_code())
+    meeting_passcode: Mapped[Optional[str]] = mapped_column(String(8),
+                                                            default=lambda: _passcode())
 
     classroom: Mapped["Classroom"] = relationship(back_populates="sessions")
     attendance: Mapped[list["AttendanceRecord"]] = relationship(

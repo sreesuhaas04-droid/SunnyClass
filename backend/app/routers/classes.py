@@ -14,6 +14,7 @@ from app.models import (
 )
 from app.schemas import ClassroomIn, ClassroomOut, EnrollIn, SessionOut, SessionStartIn
 from app.services.attendance import finalize_session
+from app.services.monitor import monitor_hub
 from app.services.realtime import hub
 
 router = APIRouter(prefix="/api/classes", tags=["classes"])
@@ -164,7 +165,10 @@ async def start_session(payload: SessionStartIn, user: User = Depends(require_te
     live = await db.scalar(select(ClassSession).where(
         ClassSession.class_id == cls.id, ClassSession.status == SessionStatus.live.value))
     if live:
-        return {"success": True, "already_live": True, "session": SessionOut.model_validate(live)}
+        return {"success": True, "already_live": True,
+                "session": SessionOut.model_validate(live),
+                "meeting": {"id": live.meeting_code, "passcode": live.meeting_passcode,
+                            "room_code": cls.room_code}}
 
     session = ClassSession(
         class_id=cls.id,
@@ -179,7 +183,11 @@ async def start_session(payload: SessionStartIn, user: User = Depends(require_te
     )
     db.add(session)
     await db.flush()
-    return {"success": True, "session": SessionOut.model_validate(session)}
+    # SUNNY starts supervising the meeting the moment it goes live.
+    monitor_hub.start_for(session.id)
+    return {"success": True, "session": SessionOut.model_validate(session),
+            "meeting": {"id": session.meeting_code, "passcode": session.meeting_passcode,
+                        "room_code": cls.room_code}}
 
 
 @sessions_router.get("/live")
@@ -202,6 +210,7 @@ async def live_sessions(user: User = Depends(get_current_user), db: AsyncSession
             {"session_id": s.id, "class_id": c.id, "class_name": c.name,
              "subject": c.subject, "room_code": c.room_code, "title": s.title,
              "started_at": s.started_at,
+             "meeting_id": s.meeting_code, "meeting_passcode": s.meeting_passcode,
              "participants": len(hub.room(s.id).participants)}
             for s, c in rows
         ],
@@ -249,4 +258,5 @@ async def end_session(session_id: str, user: User = Depends(require_teacher),
     summary = await finalize_session(db, session)
     await hub.push(session_id, {"type": "class-ended", "summary": summary})
     hub.close(session_id)
+    monitor_hub.stop_for(session_id)
     return {"success": True, "summary": summary}

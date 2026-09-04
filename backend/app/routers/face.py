@@ -79,9 +79,28 @@ async def enroll_face(payload: FaceEnrollIn, user: User = Depends(get_current_us
             )
 
     stored = 0
+    reenrol = payload.reenrol
+    if reenrol:
+        # Recovery path after a "face not recognised" join: wipe THIS user's
+        # stale gallery first so the fresh capture fully replaces it, and
+        # leave a proctor trail for the teacher.
+        old = (await db.scalars(
+            select(FaceDescriptor).where(FaceDescriptor.user_id == user.id))).all()
+        for row in old:
+            await db.delete(row)
+        live = await db.scalar(select(ClassSession).where(
+            ClassSession.status == SessionStatus.live.value,
+            ClassSession.class_id.in_(
+                select(Enrollment.class_id).where(Enrollment.student_id == user.id))))
+        if live:
+            db.add(ProctorEvent(session_id=live.id, student_id=user.id,
+                                kind="face_reenrolled", severity="warning",
+                                detail=f"{user.roll_number} re-captured their face enrolment "
+                                       f"after a failed match (old samples: {len(old)})."))
     for arr in validated:
         db.add(FaceDescriptor(user_id=user.id, vector=[float(x) for x in arr],
-                              quality=payload.quality, source="enroll"))
+                              quality=payload.quality,
+                              source="reenrol" if reenrol else "enroll"))
         stored += 1
 
     user.face_enrolled = True
@@ -225,6 +244,23 @@ async def join_class(payload: JoinIn, request: Request,
             if not session:
                 return JoinOut(success=True, admitted=False,
                                reason=f"{cls.name} has no live session right now.")
+    elif payload.meeting_id:
+        # Zoom-style join: 9-digit meeting ID + 6-char passcode.
+        code = payload.meeting_id.strip()
+        session = await db.scalar(
+            select(ClassSession).where(
+                ClassSession.meeting_code == code.replace(" ", ""),
+                ClassSession.status == SessionStatus.live.value))
+        if session:
+            supplied = (payload.meeting_passcode or "").strip().upper()
+            stored = (session.meeting_passcode or "").strip().upper()
+            if supplied != stored:
+                return JoinOut(success=True, admitted=False,
+                               reason="Incorrect meeting passcode. Check the code your "
+                                      "teacher shared and try again.")
+        else:
+            return JoinOut(success=True, admitted=False,
+                           reason="No live meeting with that meeting ID.")
     if not session:
         return JoinOut(success=True, admitted=False, reason="No such class or room code.")
     if session.status != SessionStatus.live.value:

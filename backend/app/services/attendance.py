@@ -154,6 +154,15 @@ async def apply_violation(
     return record
 
 
+def derive_status(ratio: float, join_status: str) -> str:
+    """Pure status-from-presence helper, shared by the monitor and finalize."""
+    if ratio < settings.PRESENT_MIN_PRESENCE_RATIO * 0.35:
+        return AttendanceStatus.absent.value
+    if ratio < settings.PRESENT_MIN_PRESENCE_RATIO:
+        return AttendanceStatus.late.value
+    return join_status or AttendanceStatus.present.value
+
+
 async def finalize_session(db: AsyncSession, session: ClassSession) -> dict:
     """Recompute final statuses when a class ends, and create absent rows for
     every enrolled student who never showed up."""
@@ -172,12 +181,13 @@ async def finalize_session(db: AsyncSession, session: ClassSession) -> dict:
     for r in records:
         ratio = r.present_seconds / total_seconds
         if r.status != AttendanceStatus.excused.value:
-            if ratio < settings.PRESENT_MIN_PRESENCE_RATIO * 0.35:
-                r.status = AttendanceStatus.absent.value
-                r.notes = (r.notes or "") + f" auto: presence {ratio:.0%} below floor."
-            elif ratio < settings.PRESENT_MIN_PRESENCE_RATIO:
-                r.status = AttendanceStatus.late.value
-                r.notes = (r.notes or "") + f" auto: partial presence {ratio:.0%}."
+            new_status = derive_status(ratio, r.status)
+            if new_status != r.status:
+                if new_status == AttendanceStatus.absent.value:
+                    r.notes = (r.notes or "") + f" auto: presence {ratio:.0%} below floor."
+                else:
+                    r.notes = (r.notes or "") + f" auto: partial presence {ratio:.0%}."
+                r.status = new_status
 
     roster = list((await db.scalars(
         select(Enrollment).where(Enrollment.class_id == session.class_id)

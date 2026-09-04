@@ -33,7 +33,89 @@
       <h1 id="greeting">Dashboard</h1>
       <p id="subgreeting">Loading your classes…</p>
     </div>
-    <button class="btn btn-primary" id="btn-join" hidden>Join live class →</button>
+    <div style="display:flex; gap:10px; align-items:center;">
+      <button class="btn btn-ghost" id="btn-join-code" hidden>Join with meeting ID</button>
+      <button class="btn btn-ghost" id="btn-host" hidden>Host a meeting</button>
+      <button class="btn btn-primary" id="btn-join" hidden>Join live class →</button>
+    </div>
+  </div>
+
+  <!-- ---------- host-a-meeting modal ---------- -->
+  <div class="modal-backdrop" id="host-modal" hidden>
+    <div class="modal-card">
+      <h2>Host a meeting</h2>
+      <p class="modal-sub">Pick a class — we'll start it live and give you a Meeting ID + passcode to share.</p>
+      <div class="field">
+        <label for="host-class">Class</label>
+        <select id="host-class"></select>
+      </div>
+      <div class="field">
+        <label for="host-title">Title (optional)</label>
+        <input id="host-title" type="text" maxlength="120" placeholder="e.g. Revision session">
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" id="host-cancel">Cancel</button>
+        <button class="btn btn-primary" id="host-create">Start meeting</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ---------- meeting created / share modal ---------- -->
+  <div class="modal-backdrop" id="share-modal" hidden>
+    <div class="modal-card">
+      <h2>🎬 Your meeting is live</h2>
+      <div class="share-box">
+        <div class="share-row">
+          <div>
+            <span class="share-label">Meeting ID</span>
+            <b class="share-value" id="share-id">—</b>
+          </div>
+          <button class="btn btn-ghost" id="copy-id">Copy</button>
+        </div>
+        <div class="share-row">
+          <div>
+            <span class="share-label">Passcode</span>
+            <b class="share-value" id="share-pass">—</b>
+          </div>
+          <button class="btn btn-ghost" id="copy-pass">Copy</button>
+        </div>
+        <div class="share-row">
+          <div>
+            <span class="share-label">Classroom code</span>
+            <b class="share-value" id="share-room">—</b>
+          </div>
+          <button class="btn btn-ghost" id="copy-room">Copy</button>
+        </div>
+      </div>
+      <p class="modal-sub">Students join from their dashboard → “Join with meeting ID”, then pass the face check as usual.</p>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" id="share-close">Close</button>
+        <button class="btn btn-primary" id="share-enter">Enter classroom →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ---------- join by meeting id modal ---------- -->
+  <div class="modal-backdrop" id="joincode-modal" hidden>
+    <div class="modal-card">
+      <h2>Join with meeting ID</h2>
+      <p class="modal-sub">Enter the Meeting ID and passcode your teacher shared.</p>
+      <div class="field">
+        <label for="jc-id">Meeting ID</label>
+        <input id="jc-id" type="text" inputmode="numeric" maxlength="11"
+               placeholder="e.g. 841203966" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="jc-pass">Passcode</label>
+        <input id="jc-pass" type="text" maxlength="6" placeholder="6 characters"
+               autocomplete="off" style="text-transform:uppercase">
+      </div>
+      <div class="gate-msg" id="jc-msg"></div>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" id="jc-cancel">Cancel</button>
+        <button class="btn btn-primary" id="jc-go">Join</button>
+      </div>
+    </div>
   </div>
 
   <!-- ---------- headline stats ---------- -->

@@ -111,10 +111,10 @@ const FaceRecognition = (() => {
     return samples;
   }
 
-  async function enroll(video, count = 3, onProgress = null) {
+  async function enroll(video, count = 3, onProgress = null, reenrol = false) {
     const samples = await captureSamples(video, count, onProgress);
     if (!samples.length) return { success: false, reason: 'no_face' };
-    const res = await API.face.enroll(samples);
+    const res = await API.face.enroll(samples, 1.0, reenrol);
     return { success: true, ...res };
   }
 

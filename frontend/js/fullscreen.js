@@ -9,6 +9,7 @@ const FullscreenGuard = (() => {
 
   let sessionId = null;
   let active = false;
+  let lockMode = false;          // strict: students, exam-style lockdown
   let violations = 0;
   let lastReportAt = 0;
   const listeners = [];
@@ -75,15 +76,24 @@ const FullscreenGuard = (() => {
   /* --- handlers --- */
   const onVisibility = () => {
     if (!active) return;
-    if (document.hidden) report('tab_switch', 'warning', 'Page hidden — student switched tab or app');
+    if (document.hidden) {
+      report('tab_switch', 'warning', 'Page hidden — student switched tab or app');
+      // Returning from a tab switch: re-assert fullscreen immediately.
+      if (lockMode) request().catch(() => {});
+    }
   };
   const onBlur = () => {
     if (!active) return;
-    if (!document.hidden) report('window_blur', 'info', 'Class window lost focus');
+    if (!document.hidden) report('window_blur', 'warning', 'Class window lost focus');
   };
   const onFsChange = () => {
     if (!active) return;
-    if (!isFullscreen()) report('fullscreen_exit', 'warning', 'Left fullscreen mode');
+    if (!isFullscreen()) {
+      report('fullscreen_exit', 'warning', 'Left fullscreen mode');
+      // Strict lock: bounce straight back into fullscreen. If the browser
+      // needs a user gesture, the classroom overlay forces the click.
+      if (lockMode) setTimeout(() => request().catch(() => {}), 150);
+    }
   };
   const onKeydown = (e) => {
     if (!active) return;
@@ -102,9 +112,10 @@ const FullscreenGuard = (() => {
     e.preventDefault(); e.returnValue = '';
   };
 
-  function start(id) {
+  function start(id, strict = true) {
     sessionId = id;
     active = true;
+    lockMode = strict;
     violations = 0;
     document.addEventListener('visibilitychange', onVisibility);
     window.addEventListener('blur', onBlur);
@@ -136,6 +147,7 @@ const FullscreenGuard = (() => {
     requestFullscreen: request, exitFullscreen: exit, isFullscreen,
     get violations() { return violations; },
     get active() { return active; },
+    get locked() { return lockMode; },
   };
 })();
 

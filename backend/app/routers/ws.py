@@ -327,3 +327,10 @@ async def class_socket(
 @router.get("/api/realtime/stats")
 async def realtime_stats():
     return {"success": True, **hub.stats()}
+
+
+@router.get("/api/realtime/monitor")
+async def monitor_status():
+    """Which live sessions SUNNY is currently supervising."""
+    from app.services.monitor import monitor_hub
+    return {"success": True, "monitoring": monitor_hub.active()}

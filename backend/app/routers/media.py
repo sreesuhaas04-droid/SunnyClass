@@ -17,13 +17,36 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.config import settings
 from app.core.database import get_db
 from app.deps import get_current_user
-from app.models import Caption, ClassSession, MeetingChatMessage, Recording, Role, User
+from app.models import Caption, ClassSession, Classroom, MeetingChatMessage, Recording, Role, User
 from app.schemas import CaptionIn
 from app.services import llm
 from app.services.realtime import hub
 
 router = APIRouter(prefix="/api/captions", tags=["captions"])
 meetings_router = APIRouter(prefix="/api/meetings", tags=["meetings"])
+
+
+@meetings_router.post("/validate")
+async def validate_meeting(payload: dict, user: User = Depends(get_current_user),
+                           db: AsyncSession = Depends(get_db)):
+    """Resolve a meeting ID (+ optional passcode) to its live session *before*
+    the camera/face gate, so the join page can route the student correctly."""
+    code = str(payload.get("meeting_id", "")).strip().replace(" ", "")
+    if not code:
+        raise HTTPException(status_code=422, detail="meeting_id is required")
+    session = await db.scalar(
+        select(ClassSession).where(ClassSession.meeting_code == code,
+                                   ClassSession.status == "live"))
+    if not session:
+        return {"success": True, "valid": False, "reason": "No live meeting with that ID."}
+    supplied = str(payload.get("meeting_passcode", "")).strip().upper()
+    stored = (session.meeting_passcode or "").strip().upper()
+    if supplied != stored:
+        return {"success": True, "valid": False, "reason": "Incorrect meeting passcode."}
+    cls = await db.get(Classroom, session.class_id)
+    return {"success": True, "valid": True,
+            "session": {"id": session.id, "title": session.title,
+                        "class_name": cls.name if cls else "Class"}}
 
 
 @meetings_router.get("/{session_id}/chat")
